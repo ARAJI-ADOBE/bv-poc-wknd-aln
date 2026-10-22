@@ -26,7 +26,7 @@ Evidence labels: **Documented** (Adobe docs say so), **Tested** (we proved it on
 - [x] 3. Assets when a page is unpublished: done 22 Oct (B5, image stays reachable)
 - [x] 4. Does scheduled page publish also publish referenced assets / fragments? Done 22 Oct (Scenarios A, B, C)
 - [x] 5. Automatic asset unpublish from expiry metadata: concluded 22 Oct (EDS: time-based only via crontab; metadata needs automation; PDF unpublish run not executed)
-- [ ] 6. Experience Workspace / Coworker capabilities
+- [ ] 6. Experience Workspace capabilities
 - [ ] 7. AEM vs EDS comparison
 - [ ] 8. Knowledge document, Adobe Express slides, screenshots, demo script
 
@@ -226,7 +226,7 @@ actions are logged as **araji@adobe.com**, so the audit log can't tell Ema from 
   Preview copies them into this site's media bus. Risk to note: the source documents depend on another site's URLs.
 - No AEM Assets / Dynamic Media URLs found on these pages yet. Testing AEM Assets references needs a page that uses them.
 
-## Phase 6: Experience Workspace / Coworker replication (prepared 22 Oct 2026)
+## Phase 6: Experience Workspace replication (prepared 22 Oct 2026)
 - User decisions: replicate all five tasks (W1–W5 = T1–T5) on 8 unpublished adventure pages (user approved that 7 will go live).
 - Superprompt and page mapping: `phase6-workspace-superprompt.md`. Times are relative (S = first 5-min mark ≥ 20 min after approval).
 - Caveat for the comparison: the superprompt includes a "Reference" section naming both working mechanisms. Ema discovered the mechanism itself on 19 Oct.
@@ -362,7 +362,7 @@ Sandbox left behind: `/us/en/expiry-test.pdf` (previewed, not live) and `/us/en/
 - Evidence images saved to `testing/scheduler/evidence/` (8 screenshots + logo).
 - Tooling: an editable .pptx with speaker notes is feasible (npm registry reachable; the library is not yet installed).
 
-## Phase 6 results: Experience Workspace / Coworker (user screenshots W-01…W-04 + audit log, verified 22 Oct)
+## Phase 6 results: Experience Workspace (user screenshots W-01…W-04 + audit log, verified 22 Oct)
 | # | Observation | Evidence | Status |
 |---|---|---|---|
 | W1 | Step 1 "pre-check" called `content_preview` ×8: **it actually re-previewed all 8 pages, twice** (POST preview 12:33:49–59 and 12:37:37–39 UTC = 18:03 / 18:07 IST, as araji@adobe.com). The prompt said "no changes yet". Preview only; nothing went live | Audit log + status API | Tested |
@@ -371,13 +371,13 @@ Sandbox left behind: `/us/en/expiry-test.pdf` (previewed, not live) and `/us/en/
 | W4 | User asked "publish the current page in next 5 mins": "**I cannot schedule a publish action**" (reason: no clock). It offered 3 alternatives. Option 2 ("find the page in da.live/apps/scheduler, click Schedule Publish") **contradicts the docs and our test**: the scheduler app only lists/opens/deletes; scheduling happens in the editor | W-03 vs aem.live doc + M2b | Tested |
 | W5 | User asked "publish this page at 6:45 pm IST": content_read **Bad Request** ×3; it then said it **cannot read or write** the crontab ("DA sheets require the sheet editor UI"), contradicting W2 (it had read it) and 19 Oct (Ema wrote it via the DA source API) | W-04 | Tested |
 | W6 | Its manual fallback row had a **wrong date**: "at 1:15 pm on the 14th day of July in 2025" (past date, so it would never run). Conversion 6:45 PM IST = 1:15 PM UTC was correct. It also said opening `…aem.page/.helix/crontab.json` in a browser activates the schedule; activation actually requires a **Preview** action (19 Oct: POST preview) | W-04 | Tested |
-| W7 | Outcome: **no schedule created by Coworker, no page published**. 8 pages still live 404. Crontab **preview unchanged** (19 Oct), so nothing activated | Status API, crontab status | Tested |
+| W7 | Outcome: **no schedule created by Experience Workspace, no page published**. 8 pages still live 404. Crontab **preview unchanged** (19 Oct), so nothing activated | Status API, crontab status | Tested |
 | W8 | Crontab **row 6 now exists in DA**: when = "at 6:47 pm on the 22nd day of October in 2026", **command empty**, **not previewed / inactive**. Origin to be confirmed with the user | DA source | Tested (origin unknown) |
 | Side | Registering the site in the scheduler app (M2b, ~05:38 UTC) created an **admin API key** (`config POST …/apiKeys.json` by araji@adobe.com) | Audit log | Tested |
 
-Characterisation: **unsuccessful in our environment, with tool limitations reported by Coworker itself** (no clock access, crontab read/write errors). Not shown to be unsupported in general.
-| W8-resolved | Row 6 was **added manually by the user** while trying Coworker's manual fallback; left incomplete (no command, never previewed, so inactive) | User confirmation | — |
-| W-meta | The Workspace prompt **kept the REFERENCE section** (Coworker had hints Ema didn't need). The test was complete after 4 user messages: superprompt, "can you access this cron tab", "publish the current page in next 5 mins", "publish this page at 6:45 pm IST". The user never replied "approved" or gave the time in the requested form | User confirmation + W-01…W-04 | — |
+Characterisation: **unsuccessful in our environment, with tool limitations reported by Experience Workspace itself** (no clock access, crontab read/write errors). Not shown to be unsupported in general.
+| W8-resolved | Row 6 was **added manually by the user** while trying Experience Workspace's manual fallback; left incomplete (no command, never previewed, so inactive) | User confirmation | — |
+| W-meta | The Workspace prompt **kept the REFERENCE section** (Experience Workspace had hints Ema didn't need). The test was complete after 4 user messages: superprompt, "can you access this cron tab", "publish the current page in next 5 mins", "publish this page at 6:45 pm IST". The user never replied "approved" or gave the time in the requested form | User confirmation + W-01…W-04 | — |
 
 ### Sitemap / index evidence for 7A (checked 22 Oct 17:50 UTC)
 | Observation | Status |
@@ -386,7 +386,7 @@ Characterisation: **unsuccessful in our environment, with tool limitations repor
 | arctic-surfing (scheduled publish then scheduled unpublish, T5) is **not** in the sitemap/index; the 19 Oct log shows indexer "content: deleted" 16:40:14 IST | Tested |
 | Test pages directly under /us/en/ (sched-*, scheduled-*, expiry-*) are never indexed: the index config only includes /us/en/adventures/** and /us/en/magazine/** (by design) | Config inspection |
 | ⚠️ The sitemap `origin` in helix-sitemap.yaml is still the **old site** (`main--edscapstoneajay--ajayajju2412.aem.live`), so every sitemap URL points at the old host | Tested (config + live sitemap) |
-| W-user | User's summary: "it doesn't support scheduling because it has no clock". Deck wording agreed: in our test Coworker could not create the schedule. It reported (1) no time access and (2) crontab read/write errors that blocked it even with an exact time (W5); it also suggested a past date and an incorrect activation step (W6). Do not claim it is unsupported in general | Agreed framing |
+| W-user | User's summary: "it doesn't support scheduling because it has no clock". Deck wording agreed: in our test Experience Workspace could not create the schedule. It reported (1) no time access and (2) crontab read/write errors that blocked it even with an exact time (W5); it also suggested a past date and an incorrect activation step (W6). Do not claim it is unsupported in general | Agreed framing |
 - Screenshots: the user captured only what is in `evidence/`; use results tables for the rest (22 Oct).
 - Duration: **15 minutes** including Q&A → about 14–16 main slides + an appendix holding the reusable knowledge-artifact detail (22 Oct).
 - Demo mode: **slides + live opening of the key pages/screens per section** (show the real page or functionality in the browser; no live scheduling). Each slide gets a 'Live link' and the script says when to click (22 Oct).
@@ -401,4 +401,4 @@ Characterisation: **unsuccessful in our environment, with tool limitations repor
 - 22 Oct: the user still saw 'Prepared for' because their viewer showed a cached copy (the old one-line name layout). The deck is now saved as **Scheduled-Publishing-EDS-v2.pptx** and the old file is removed.
 - 22 Oct: per the user, test codes (M0, T1, W1, A3, B5, X1c, L5…) were removed from all slide text and speaker notes and replaced with plain wording or figure references. Ema tasks are shown as '1 · Publish' to '5 · Publish + unpublish'; appendix logs use step numbers; the figure index uses 'Log · step' (e.g. A2 · 6). Saved as **Scheduled-Publishing-EDS-v3.pptx** (v2 removed). The progress log keeps the original IDs for traceability.
 - 22 Oct: per the user, the 'Open items' line was removed from slide 16 (Conclusion) and from its notes; open items remain in appendix A9. Saved as **Scheduled-Publishing-EDS-v4.pptx**.
-- 22 Oct: per the user, 'Coworker' (an internal nickname, not a product name) was replaced with 'Experience Workspace' everywhere in the deck: slides, notes and file properties (24 mentions). Saved as **Scheduled-Publishing-EDS-v5.pptx**.
+- 22 Oct: per the user, an internal nickname for the Experience Workspace assistant was removed everywhere in the deck (slides, notes, file properties; 24 mentions) and replaced with 'Experience Workspace'. Saved as **Scheduled-Publishing-EDS-v5.pptx**. The working files were cleaned the same way.

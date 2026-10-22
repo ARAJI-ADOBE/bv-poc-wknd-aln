@@ -11,7 +11,7 @@ Labels used on slides: ✅ Tested · 📄 Documented · ⚠️ Limitation · ❓
 - Kicker: EDS · Experience Workspace · EMA
 - Title: **Scheduled Publishing in Edge Delivery Services**
 - Subtitle: Manual, Ema-assisted and Experience Workspace approaches, tested on a live sandbox
-- Summary: We enabled, ran and verified scheduled publishing on bv-poc-wknd-aln, compared Ema and Coworker, and tested fragment, asset and expiry behaviour.
+- Summary: We enabled, ran and verified scheduled publishing on bv-poc-wknd-aln, compared Ema and Experience Workspace, and tested fragment, asset and expiry behaviour.
 - Prepared for: VP, Global Delivery Center
 - ALAN RAJI MANI · araji@adobe.com · 23 Oct 2026
 - Visual: Adobe wordmark top-left
@@ -172,11 +172,11 @@ Labels used on slides: ✅ Tested · 📄 Documented · ⚠️ Limitation · ❓
 **Notes**
 - Say: "Ema simplifies the mechanics and adds bulk and unpublish. But it doesn't remove human approval, and its actions show up in the log under my account."
 - Q: *Is Ema faster?* A: "We didn't measure that. The 74-minute window was set by the schedule times, not by Ema."
-- Transition: "We then asked Experience Workspace's Coworker to do the same task."
+- Transition: "We then asked Experience Workspace to do the same task."
 
 ---------------------------------------------------------------------------------------------------
 
-## 10 · 6. Experience Workspace (Coworker): what happened
+## 10 · 6. Experience Workspace: what happened
 - Same 5-task superprompt, on 8 equivalent pages; REFERENCE hints included; 4 user messages
 - Findings (✅ verified via screenshots + audit log):
   - Re-previewed all 8 pages **twice** during the "no changes" pre-check (W1)
@@ -187,7 +187,7 @@ Labels used on slides: ✅ Tested · 📄 Documented · ⚠️ Limitation · ❓
 - Screenshots: `W-03-cannot-schedule-no-clock.jpg`, `W-04-cannot-write-sheet-wrong-date.jpg`
 
 **Notes**
-- Say: "Coworker couldn't complete it in our environment. It told us why: it has no clock, and it couldn't read or write the schedule sheet reliably. Even with an exact time, it failed."
+- Say: "Experience Workspace couldn't complete it in our environment. It told us why: it has no clock, and it couldn't read or write the schedule sheet reliably. Even with an exact time, it failed."
 - Careful: "We're not claiming Workspace can never schedule, only that it didn't in our setup on 22 Oct."
 - Q: *Did it break anything?* A: "It re-previewed 8 pages (preview only). Nothing went live. I added an incomplete row to the sheet myself while trying its fallback; it was never activated."
 - Transition: "Side by side with Ema:"
@@ -195,7 +195,7 @@ Labels used on slides: ✅ Tested · 📄 Documented · ⚠️ Limitation · ❓
 ---------------------------------------------------------------------------------------------------
 
 ## 11 · 6. Ema vs Experience Workspace
-| | Ema (19 Oct) | Coworker (22 Oct) |
+| | Ema (19 Oct) | Experience Workspace (22 Oct) |
 |---|---|---|
 | Schedules created | ✅ 5/5 tasks | ❌ 0 |
 | Pages published on time | ✅ 7/7 + 1 unpublish | ❌ none |
@@ -205,10 +205,10 @@ Labels used on slides: ✅ Tested · 📄 Documented · ⚠️ Limitation · ❓
 | Errors | 1 retry, 1 trimmed output | Bad Request ×6, contradictory answers |
 | Unrequested changes | None recorded | 8 pages re-previewed ×2 |
 | Advice quality | n/a | Past date; wrong activation step; scheduler-app claim contradicts docs |
-- Characterisation: **unsuccessful in our environment** (tool limitations reported by Coworker)
+- Characterisation: **unsuccessful in our environment** (tool limitations reported by Experience Workspace)
 
 **Notes**
-- Say: "Ema finished and proved it. Coworker didn't create a schedule, and some of its advice would have failed silently."
+- Say: "Ema finished and proved it. Experience Workspace didn't create a schedule, and some of its advice would have failed silently."
 - Transition: "Abhishek and Mohit also asked for three extra investigations."
 
 ---------------------------------------------------------------------------------------------------
@@ -278,7 +278,7 @@ Labels used on slides: ✅ Tested · 📄 Documented · ⚠️ Limitation · ❓
   3. Use the crontab (or Ema) for bulk and unpublish; Snapshots for coordinated launches
   4. Don't put embargoed images on previewed pages
   5. Treat expiry as a process: register → automation → crontab
-- Open items ❓: PDF scheduled unpublish run · snapshot scheduling · AEM Assets integration · Coworker re-test · sitemap host fix
+- Open items ❓: PDF scheduled unpublish run · snapshot scheduling · AEM Assets integration · Experience Workspace re-test · sitemap host fix
 - References: aem.live schedule-publish · bbird how-to · aem.live/docs/scheduling · aem.live/docs/snapshots-reviews · aem.live/docs/media
 
 **Notes**

@@ -1,4 +1,4 @@
-# Phase 6: Experience Workspace / Coworker replication of the Ema scheduled-publishing test
+# Phase 6: Experience Workspace replication of the Ema scheduled-publishing test
 
 Prepared 22 Oct 2026. Mirrors Ema tasks T1–T5 (19 Oct) as W1–W5 on 8 different, equivalent pages
 (previewed 16 Oct, never published; checked 22 Oct). Original Ema pages and crontab rows must stay untouched.
