@@ -1,7 +1,7 @@
 const PptxGenJS = require('pptxgenjs');
 
 const EV = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/evidence/';
-const OUT = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/Scheduled-Publishing-EDS-v3.pptx';
+const OUT = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/Scheduled-Publishing-EDS-v4.pptx';
 
 const RED = 'EB1000';
 const DARK = '2C2C2C';
@@ -615,15 +615,11 @@ const URL = {
     '5. Treat expiry as a process: register → automation → scheduled unpublish',
   ], { x: 6.8, y: 1.9, w: 6.0, h: 3.0, fontSize: 12 });
   s.addText([
-    { text: 'Open items (Unknown):  ', options: { bold: true, color: GREY } },
-    { text: 'PDF scheduled-unpublish run · snapshot scheduling · AEM Assets integration · Coworker re-test · sitemap host fix', options: { color: DARK } },
-  ], { x: 0.5, y: 5.0, w: 12.3, h: 0.5, fontFace: FONT, fontSize: 12 });
-  s.addText([
     { text: 'References:  ', options: { bold: true, color: DARK } },
     { text: 'aem.live/docs/ew/administering/schedule-publish · demo.bbird.live/demo-docs/usecases/how-to-schedule-publish · aem.live/docs/scheduling · aem.live/docs/snapshots-reviews · aem.live/docs/media', options: { color: BLUE } },
-  ], { x: 0.5, y: 5.55, w: 12.3, h: 0.7, fontFace: FONT, fontSize: 11 });
+  ], { x: 0.5, y: 5.2, w: 12.3, h: 0.7, fontFace: FONT, fontSize: 11 });
   s.addNotes(notes({
-    say: 'To summarise. Everything on the left we proved on the site. Scheduling is easy to enable and reliable, it auto-previews, but it publishes the preview, so authors must preview again after editing. Ema completed every task, including bulk and unpublish, with approvals. Coworker didn\'t complete the task in our environment. Fragments need their own publishing, images travel with the page but outlive it. My five recommendations are on the right. The open items at the bottom are clearly unknown, not failures, and they\'re the next things to validate.',
+    say: 'To summarise. Everything on the left we proved on the site. Scheduling is easy to enable and reliable, it auto-previews, but it publishes the preview, so authors must preview again after editing. Ema completed every task, including bulk and unpublish, with approvals. Coworker didn\'t complete the task in our environment. Fragments need their own publishing, images travel with the page but outlive it. My five recommendations are on the right.',
     transition: '"I\'m happy to take questions. The full test logs are in the appendix."',
     qa: 'Q: What would you do next?\nA: Run the PDF scheduled-unpublish test, test scheduling a snapshot, fix the sitemap host, and re-test Coworker when its tools change.',
     time: '1:00',
