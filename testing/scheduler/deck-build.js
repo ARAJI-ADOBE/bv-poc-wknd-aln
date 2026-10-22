@@ -1,7 +1,7 @@
 const PptxGenJS = require('pptxgenjs');
 
 const EV = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/evidence/';
-const OUT = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/Scheduled-Publishing-EDS-v5.pptx';
+const OUT = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/Scheduled-Publishing-EDS.pptx';
 
 const RED = 'EB1000';
 const DARK = '2C2C2C';
