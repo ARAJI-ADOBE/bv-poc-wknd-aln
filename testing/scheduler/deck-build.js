@@ -1,7 +1,7 @@
 const PptxGenJS = require('pptxgenjs');
 
 const EV = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/evidence/';
-const OUT = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/Scheduled-Publishing-EDS-v4.pptx';
+const OUT = '/backups/ARAJI-ADOBE/bv-poc-wknd-aln/repo/testing/scheduler/Scheduled-Publishing-EDS-v5.pptx';
 
 const RED = 'EB1000';
 const DARK = '2C2C2C';
@@ -146,14 +146,14 @@ const URL = {
   s.addText('EDS  ·  Experience Workspace  ·  EMA', { x: 0.8, y: 1.75, w: 11, h: 0.4, fontFace: FONT, fontSize: 14, bold: true, color: RED, charSpacing: 1 });
   s.addText('Scheduled Publishing in Edge Delivery Services', { x: 0.8, y: 2.2, w: 11.5, h: 1.1, fontFace: FONT, fontSize: 38, bold: true, color: DARK });
   s.addText('Manual, Ema-assisted and Experience Workspace approaches, tested on a live sandbox', { x: 0.8, y: 3.3, w: 11.5, h: 0.5, fontFace: FONT, fontSize: 18, color: GREY });
-  s.addText('We enabled, ran and verified scheduled publishing on bv-poc-wknd-aln, compared Ema with Coworker, and tested fragment, asset and expiry behaviour requested by the team.', { x: 0.8, y: 4.0, w: 11, h: 0.8, fontFace: FONT, fontSize: 14, color: DARK });
+  s.addText('We enabled, ran and verified scheduled publishing on bv-poc-wknd-aln, compared Ema with Experience Workspace, and tested fragment, asset and expiry behaviour requested by the team.', { x: 0.8, y: 4.0, w: 11, h: 0.8, fontFace: FONT, fontSize: 14, color: DARK });
   s.addText([
     { text: 'ALAN RAJI MANI', options: { bold: true, breakLine: true } },
     { text: 'araji@adobe.com  ·  23 Oct 2026', options: { color: GREY } },
   ], { x: 0.8, y: 5.2, w: 11, h: 0.8, fontFace: FONT, fontSize: 14, color: DARK });
   footer(s);
   s.addNotes(notes({
-    say: 'Good morning everyone. Today I\'ll walk you through scheduled publishing in Edge Delivery Services: what it is, why marketers need it, how we did it manually, how Ema did it, and what happened when we tried the same task with Experience Workspace\'s Coworker. After that I\'ll cover the three additional investigations Abhishek and Mohit asked for: what happens to assets when a page is unpublished, whether fragments and assets are published with a scheduled page, and whether assets can be unpublished based on expiry metadata. Everything I show was tested on our sandbox site, bv-poc-wknd-aln, between 19 and 22 October. Wherever something is only documented or not yet tested, I\'ll say so explicitly.',
+    say: 'Good morning everyone. Today I\'ll walk you through scheduled publishing in Edge Delivery Services: what it is, why marketers need it, how we did it manually, how Ema did it, and what happened when we tried the same task with Experience Workspace. After that I\'ll cover the three additional investigations Abhishek and Mohit asked for: what happens to assets when a page is unpublished, whether fragments and assets are published with a scheduled page, and whether assets can be unpublished based on expiry metadata. Everything I show was tested on our sandbox site, bv-poc-wknd-aln, between 19 and 22 October. Wherever something is only documented or not yet tested, I\'ll say so explicitly.',
     explain: 'Set expectations: green "Tested" means we proved it on the site; blue "Documented" means Adobe\'s docs say it; amber "Limitation" is an observed constraint; grey "Unknown" means not tested yet.',
     transition: '"Let\'s start with what scheduling actually means in EDS."',
     time: '0:30',
@@ -437,7 +437,7 @@ const URL = {
     say: 'Comparing the two: Ema removes the setup and the mechanics, and adds bulk publishing and scheduled unpublishing. But it doesn\'t remove the human: I approved every change, and I had to stay in the session while it verified, because it can\'t wake up between messages. Its scheduling method also doesn\'t auto-preview, there\'s no queue view, and in the audit log its actions appear under my account, so you can\'t tell Ema from me.',
     explain: 'Be careful not to claim speed: the 74-minute window on 19 October was set by the scheduled times, not by Ema\'s performance. The recorded facts are 20 user entries and 24 Ema actions.',
     labels: 'Tested: all rows. Limitation: no auto-preview, no queue, attribution, in-session monitoring, shared-sheet risk.',
-    transition: '"We then asked Experience Workspace\'s Coworker to do the same task."',
+    transition: '"We then asked Experience Workspace to do the same task."',
     qa: 'Q: Is Ema faster than doing it manually?\nA: We didn\'t measure that. For a single page, the editor is a few clicks; Ema\'s value is bulk, unpublish and built-in verification.\n\nQ: Who is accountable for Ema\'s changes?\nA: In the log they appear under the approving user\'s account, which is why the approval gates matter.',
     time: '1:00',
   }));
@@ -445,7 +445,7 @@ const URL = {
 
 // ---------------------------------------------------------------- 10 Workspace what happened
 {
-  const s = base('6 · Experience Workspace findings', 'Coworker: what we asked, what happened (22 Oct)');
+  const s = base('6 · Experience Workspace findings', 'What we asked, what happened (22 Oct)');
   bullets(s, [
     { text: 'Same 5-task superprompt on 8 equivalent pages; hints included; 4 user messages', bold: true },
     { text: 'Pre-check ("no changes yet") re-previewed all 8 pages, twice: 6:03 and 6:07 PM IST', color: AMBER },
@@ -456,13 +456,13 @@ const URL = {
     { text: 'Outcome: no schedule created, no page published', bold: true, color: RED },
     { text: 'Verified with Adobe\'s audit log and page status; the user\'s own incomplete sheet row (never activated) is noted in the appendix', sub: true, color: GREY },
   ], { w: 7.3, fontSize: 13 });
-  img(s, 'W-03-cannot-schedule-no-clock.jpg', 7.95, 1.55, 2.35, 4.95, 385, 1047, 'Coworker: "I cannot schedule"');
-  img(s, 'W-04-cannot-write-sheet-wrong-date.jpg', 10.5, 1.55, 2.35, 4.95, 388, 849, 'Coworker: sheet errors and a past date');
+  img(s, 'W-03-cannot-schedule-no-clock.jpg', 7.95, 1.55, 2.35, 4.95, 385, 1047, 'Experience Workspace: "I cannot schedule"');
+  img(s, 'W-04-cannot-write-sheet-wrong-date.jpg', 10.5, 1.55, 2.35, 4.95, 388, 849, 'Experience Workspace: sheet errors and a past date');
   s.addNotes(notes({
-    say: 'Mohit asked whether Experience Workspace could do the same thing, so I gave Coworker the same five-task prompt, on eight equivalent pages, including hints about how scheduling works on this site. It didn\'t complete the task. It told us it has no real-time clock, so it couldn\'t calculate the times. When I gave it an exact time, 6:45 PM IST, it failed with errors reading and writing the schedule sheet. Its fallback advice also contained a past date and a wrong activation step. In the end, no schedule was created and no page was published.',
-    click: 'If the Coworker chat is still open, scroll to the "I cannot schedule a publish action" answer. Otherwise use Figures 13 and 14.',
-    observe: 'Coworker itself stating the limitation, and the Bad Request errors.',
-    explain: 'Be precise: this was unsuccessful in our environment. Coworker reported tool limitations (no clock, sheet read/write errors). We are not claiming Workspace can never schedule. Also mention: during its "no changes" pre-check it actually re-previewed all eight pages twice; harmless (preview only), but an unrequested change.',
+    say: 'Mohit asked whether Experience Workspace could do the same thing, so I gave Experience Workspace the same five-task prompt, on eight equivalent pages, including hints about how scheduling works on this site. It didn\'t complete the task. It told us it has no real-time clock, so it couldn\'t calculate the times. When I gave it an exact time, 6:45 PM IST, it failed with errors reading and writing the schedule sheet. Its fallback advice also contained a past date and a wrong activation step. In the end, no schedule was created and no page was published.',
+    click: 'If the Experience Workspace chat is still open, scroll to the "I cannot schedule a publish action" answer. Otherwise use Figures 13 and 14.',
+    observe: 'Experience Workspace itself stating the limitation, and the Bad Request errors.',
+    explain: 'Be precise: this was unsuccessful in our environment. Experience Workspace reported tool limitations (no clock, sheet read/write errors). We are not claiming Workspace can never schedule. Also mention: during its "no changes" pre-check it actually re-previewed all eight pages twice; harmless (preview only), but an unrequested change.',
     labels: 'Tested: all findings (screenshots + audit log). Not claimed: general unsupported status.',
     transition: '"Here\'s how it compares with Ema side by side."',
     qa: 'Q: So Workspace can\'t schedule?\nA: In our environment, with the tools it had on 22 October, it couldn\'t. We didn\'t test other configurations.\n\nQ: Did it break anything?\nA: No. It re-previewed eight pages; nothing went live. I added an incomplete row to the sheet myself while trying its fallback; it was never activated and I\'ve since removed it.\n\nQ: Was it given an advantage?\nA: Yes, the prompt included hints Ema didn\'t have, and it still didn\'t complete it.',
@@ -472,9 +472,9 @@ const URL = {
 
 // ---------------------------------------------------------------- 11 Ema vs Workspace
 {
-  const s = base('6 · Experience Workspace findings', 'Ema vs Experience Workspace (Coworker)');
+  const s = base('6 · Experience Workspace findings', 'Ema vs Experience Workspace');
   table(s, [
-    ['', 'Ema (19 Oct)', 'Coworker (22 Oct)'],
+    ['', 'Ema (19 Oct)', 'Experience Workspace (22 Oct)'],
     ['Schedules created', T('5 / 5 tasks'), NO('0')],
     ['Pages published / unpublished on time', T('7 / 7 + 1 unpublish'), NO('None')],
     ['User messages', '20 recorded entries', '4'],
@@ -484,13 +484,13 @@ const URL = {
     ['Unrequested changes', 'None recorded', L('8 pages re-previewed twice')],
     ['Advice quality', '—', L('Past date; wrong activation step; scheduler-app claim contradicts docs')],
   ], { y: 1.6, colW: [3.6, 3.9, 4.8], fontSize: 13 });
-  s.addText('Characterisation: unsuccessful in our environment. Coworker reported tool limitations (no time access, schedule-sheet read/write errors). Not shown to be unsupported in general.', { x: 0.5, y: 5.75, w: 12.3, h: 0.7, fontFace: FONT, fontSize: 13, bold: true, color: DARK });
+  s.addText('Characterisation: unsuccessful in our environment. Experience Workspace reported tool limitations (no time access, schedule-sheet read/write errors). Not shown to be unsupported in general.', { x: 0.5, y: 5.75, w: 12.3, h: 0.7, fontFace: FONT, fontSize: 13, bold: true, color: DARK });
   s.addNotes(notes({
-    say: 'Side by side: Ema completed all five tasks and proved it. Coworker created no schedule. It needed fewer messages, four, but that\'s because it stopped early. It also produced six Bad Request errors, contradicted itself about reading the sheet, and made one unrequested change.',
-    explain: 'Don\'t over-interpret "4 messages vs 20": Ema\'s 20 include approvals and verification waits for five tasks that completed; Coworker\'s 4 ended without a schedule.',
-    labels: 'Tested: both columns. Limitation: Coworker in our environment.',
+    say: 'Side by side: Ema completed all five tasks and proved it. Experience Workspace created no schedule. It needed fewer messages, four, but that\'s because it stopped early. It also produced six Bad Request errors, contradicted itself about reading the sheet, and made one unrequested change.',
+    explain: 'Don\'t over-interpret "4 messages vs 20": Ema\'s 20 include approvals and verification waits for five tasks that completed; Experience Workspace\'s 4 ended without a schedule.',
+    labels: 'Tested: both columns. Limitation: Experience Workspace in our environment.',
     transition: '"Beyond the core demo, Abhishek and Mohit asked for three additional investigations."',
-    qa: 'Q: Would Coworker work with a clock tool?\nA: Possibly, but even with an exact time it failed on sheet access, so that alone wouldn\'t fix it. It\'s worth re-testing when the tools change.',
+    qa: 'Q: Would Experience Workspace work with a clock tool?\nA: Possibly, but even with an exact time it failed on sheet access, so that alone wouldn\'t fix it. It\'s worth re-testing when the tools change.',
     time: '0:45',
   }));
 }
@@ -602,7 +602,7 @@ const URL = {
     'Scheduling auto-previews; the run publishes the preview, not later edits',
     'Reschedule and cancel work; runs within ~8 s of the minute',
     'Ema: 5/5 tasks including bulk publish and scheduled unpublish',
-    'Coworker: no schedule created in our environment',
+    'Experience Workspace: no schedule created in our environment',
     'Fragments are not carried with a page; images are',
     'Images remain reachable after their page is unpublished',
   ], { y: 1.9, w: 6.0, h: 3.0, fontSize: 12 });
@@ -619,9 +619,9 @@ const URL = {
     { text: 'aem.live/docs/ew/administering/schedule-publish · demo.bbird.live/demo-docs/usecases/how-to-schedule-publish · aem.live/docs/scheduling · aem.live/docs/snapshots-reviews · aem.live/docs/media', options: { color: BLUE } },
   ], { x: 0.5, y: 5.2, w: 12.3, h: 0.7, fontFace: FONT, fontSize: 11 });
   s.addNotes(notes({
-    say: 'To summarise. Everything on the left we proved on the site. Scheduling is easy to enable and reliable, it auto-previews, but it publishes the preview, so authors must preview again after editing. Ema completed every task, including bulk and unpublish, with approvals. Coworker didn\'t complete the task in our environment. Fragments need their own publishing, images travel with the page but outlive it. My five recommendations are on the right.',
+    say: 'To summarise. Everything on the left we proved on the site. Scheduling is easy to enable and reliable, it auto-previews, but it publishes the preview, so authors must preview again after editing. Ema completed every task, including bulk and unpublish, with approvals. Experience Workspace didn\'t complete the task in our environment. Fragments need their own publishing, images travel with the page but outlive it. My five recommendations are on the right.',
     transition: '"I\'m happy to take questions. The full test logs are in the appendix."',
-    qa: 'Q: What would you do next?\nA: Run the PDF scheduled-unpublish test, test scheduling a snapshot, fix the sitemap host, and re-test Coworker when its tools change.',
+    qa: 'Q: What would you do next?\nA: Run the PDF scheduled-unpublish test, test scheduling a snapshot, fix the sitemap host, and re-test Experience Workspace when its tools change.',
     time: '1:00',
   }));
 }
@@ -685,7 +685,7 @@ appendixSlide('A3', 'Ema test log (19 Oct) and schedule-sheet format', [
   ['Interactions', '20 user entries, 24 Ema entries; window 15:32–16:46 IST (≈74 min, set by the schedule)'],
 ], [2.0, 10.3], 11);
 
-appendixSlide('A4', 'Experience Workspace (Coworker) test log (22 Oct)', [
+appendixSlide('A4', 'Experience Workspace test log (22 Oct)', [
   ['Step', 'Observation'],
   ['1', 'content_preview ×8 in the "no changes" pre-check re-previewed all 8 pages twice (12:33 and 12:37 UTC)'],
   ['2', 'content_read Bad Request ×3, then read the 5 crontab rows correctly; promised append-only'],
@@ -740,16 +740,16 @@ appendixSlide('A8', 'Capability register', [
   ['Image removal after unpublish', 'Unknown'],
   ['Snapshot bundle publishing / scheduling a snapshot', 'Documented / Unknown'],
   ['Scheduled unpublish in editor dialog / metadata-based unpublish', 'Not available / Not native'],
-  ['AEM Assets Off Time · Coworker scheduling', 'Documented, not tested · Unsuccessful in our environment'],
+  ['AEM Assets Off Time · Experience Workspace scheduling', 'Documented, not tested · Unsuccessful in our environment'],
 ], [8.3, 4.0], 11);
 
 appendixSlide('A9', 'Open items and sandbox state', [
   ['Item', 'State / action'],
   ['Test pages', 'scheduled-publish-test (live), scheduled-cancel-test (preview), sched-frag-page + fragment (live), sched-asset-page (unpublished), expiry-test.pdf (preview), expiry-test-page (not previewed)'],
   ['Schedule sheet', '5 past Ema rows (row 6 removed by the user, 22 Oct): clear before real use'],
-  ['Coworker side effect', '8 adventure pages re-previewed (no live change)'],
+  ['Experience Workspace side effect', '8 adventure pages re-previewed (no live change)'],
   ['Sitemap', 'Update the origin to the correct host'],
-  ['To validate', 'PDF scheduled unpublish · snapshot scheduling · AEM Assets integration · Coworker re-test'],
+  ['To validate', 'PDF scheduled unpublish · snapshot scheduling · AEM Assets integration · Experience Workspace re-test'],
 ], [2.6, 9.7], 11);
 
 {
