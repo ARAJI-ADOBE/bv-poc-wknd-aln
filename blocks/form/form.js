@@ -461,6 +461,21 @@ function generatePayload(form) {
 }
 
 /**
+ * Shows a status message below the form
+ * @param {HTMLFormElement} form - Form element
+ * @param {string} text - Message text
+ */
+function showNotice(form, text) {
+  let notice = form.querySelector('.form-notice');
+  if (!notice) {
+    notice = createElement('p', 'form-notice');
+    notice.setAttribute('role', 'status');
+    form.append(notice);
+  }
+  notice.textContent = text;
+}
+
+/**
  * Handles form submission
  * @param {HTMLFormElement} form - Form element to submit
  * @returns {Promise<void>}
@@ -479,6 +494,9 @@ async function handleSubmit(form) {
     if (response.ok) {
       if (form.dataset.confirmation) {
         window.location.href = form.dataset.confirmation;
+      } else {
+        form.reset();
+        showNotice(form, 'Thank you. Your entry was received.');
       }
     } else {
       const error = await response.text();
@@ -487,24 +505,10 @@ async function handleSubmit(form) {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
+    showNotice(form, 'Sorry, your entry could not be sent. Please try again.');
   } finally {
     toggleForm(form, false);
   }
-}
-
-/**
- * Shows a notice in place of sending when the form has no submit URL
- * @param {HTMLFormElement} form - Form element
- */
-function showDemoNotice(form) {
-  let notice = form.querySelector('.form-notice');
-  if (!notice) {
-    notice = createElement('p', 'form-notice');
-    notice.setAttribute('role', 'status');
-    form.append(notice);
-  }
-  notice.textContent = 'Thank you. Demo only: your entry was not saved.';
-  form.reset();
 }
 
 /**
@@ -526,7 +530,10 @@ function enableSubmission(form, submit, fields) {
     const valid = form.reportValidity();
     if (valid) {
       if (form.dataset.action) handleSubmit(form);
-      else showDemoNotice(form);
+      else {
+        form.reset();
+        showNotice(form, 'Thank you. Demo only: your entry was not saved.');
+      }
     } else {
       const firstInvalid = form.querySelector(':invalid:not(fieldset)');
       if (firstInvalid) {
