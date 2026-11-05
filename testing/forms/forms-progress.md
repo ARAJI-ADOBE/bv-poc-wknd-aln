@@ -28,12 +28,25 @@ Labels: Documented / Tested / Unsupported / Unknown
 | 14 | Upload Form B to DA and preview it (user approved) | Ema | Tested: DA returned 201 for both items; the DA sheet rows match the local file exactly (8/8); preview returned 200 for both; the branch page renders all fields. Finished at 10:10 UTC, so about 4 min of Ema work plus 2 user approval clicks | B01/B02 screenshots (user) |
 | 5b | Ema lost DA access (401) after the session restart; fixed by re-enabling Settings → LLM Permissions | User | Tested | A04c-settings-llm-permissions-on.png |
 
+| 15 | Screenshots of Form B (branch page + DA sheet) | User | Done | B01, B02 |
+| 16 | Template: the chat attachment arrived as plain text, and it was the old scheduler deck, not "Adobe EDS_usecase.pptx". The user chose the Adobe default style | User | Limitation | — |
+| 17 | Deliverables: `Forms-POC-DA-vs-Ema.pptx` (14 slides with speaker notes), `SOP-Forms-DA-and-Ema.md`, `speaking-script.md`, `deck-build.js` (rebuild with pptxgenjs), and evidence E01–E03 captured by Ema on the branch preview | Ema | Done 10:42 UTC | testing/forms/ |
+
+| 18 | Saving to OneDrive without AEM Forms: the forms-excat add-on has no saving feature (it converts HTML forms to sheets); the Experience League local SDK page needs AEM Forms CS provisioning, so it was rejected. Route chosen: Microsoft Power Automate | Ema | Documented | — |
+| 19 | Power Automate: the Premium "When an HTTP request is received" trigger was available on the user's account (environment "Adobe (Personal Productivity)"); "Who can trigger" = Anyone was allowed; flow saved | User | Tested | C01, C02, C04, C06 |
+| 20 | Excel `wknd-contact-submissions.xlsx` in OneDrive, table Table2 (submittedAt, name, email, topic, message); action "Add a row into a table" with utcNow() + triggerBody()?['data']?[…] | User | Tested | C03, C05b |
+| 21 | Flow URL put in Form A's 2nd block cell, typed by the user in DA (kept out of chat) | User | Tested (read from DA) | C07 |
+| 22 | Ema's server test (12:37 UTC): CORS preflight 204 with allow-origin *; POST 202; the row appeared in Excel | Ema + User | Tested | C08-excel-test-row.png |
+| 23 | Code: thank-you / error message after sending (commit aef1c18) | Ema | Lint OK; push pending | — |
+
 ## Defects found
 
 - D1 (Tested, 10:15 UTC): with no submit link in the block, form.js never attaches its submit handler. Clicking the button on an empty form gives no validation messages; the page reloads with `?name=&email=&message=`, so typed values (e.g. email) would end up in the URL. Affects both forms. The earlier "empty form is invalid" result was only `checkValidity()`, not what the visitor sees.
   - Fix (user approved, branch only): commits 4d600dd and 26d5e95. The block always validates; with no submit URL it shows "Thank you. Demo only: your entry was not saved." and resets the form (select placeholders restored).
   - Tested on the local preview, both forms. Form A: empty submit keeps the URL and focuses Full Name; a bad email focuses Email; valid input shows the notice. Form B: empty submit focuses Full name; then it stops at Experience level, then Consent; valid input shows the notice and the Adventure dropdown resets to "Choose an adventure".
   - Push blocked at 10:16 UTC (no GitHub credentials after the session restart), so the branch preview still has the old code.
+  - The user pushed with Sync → Code (Ema's own git push had no credentials, even with the toggle on). Sync also committed this log as 1bdca40.
+  - Retested at 10:33 UTC on the real branch previews (`forms-poc--…aem.page/forms-poc/contact` and `/booking`): all of the above pass. D1 closed.
 - Note: the local preview's nav/footer links point to another site (edscapstoneajay). Demo from the branch preview, not the local one.
 
 ## Form A (manual DA) observations for the comparison
