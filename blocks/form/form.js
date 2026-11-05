@@ -205,6 +205,7 @@ function buildSelect(field, controlled) {
     placeholderOption.textContent = placeholder;
     placeholderOption.disabled = true;
     placeholderOption.selected = true;
+    placeholderOption.defaultSelected = true;
     select.append(placeholderOption);
   }
 
