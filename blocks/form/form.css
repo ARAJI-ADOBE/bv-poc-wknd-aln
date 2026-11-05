@@ -235,3 +235,11 @@
     width: max-content;
   }
 }
+
+.form .form-notice {
+  margin: 1em 0 0;
+  border-left: 4px solid var(--link-color);
+  padding: 0.5em 0.75em;
+  background-color: var(--light-color);
+  font-size: var(--body-font-size-s);
+}

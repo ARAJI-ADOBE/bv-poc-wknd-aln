@@ -492,13 +492,28 @@ async function handleSubmit(form) {
 }
 
 /**
+ * Shows a notice in place of sending when the form has no submit URL
+ * @param {HTMLFormElement} form - Form element
+ */
+function showDemoNotice(form) {
+  let notice = form.querySelector('.form-notice');
+  if (!notice) {
+    notice = createElement('p', 'form-notice');
+    notice.setAttribute('role', 'status');
+    form.append(notice);
+  }
+  notice.textContent = 'Thank you. Demo only: your entry was not saved.';
+  form.reset();
+}
+
+/**
  * Sets up form submission handler
  * @param {HTMLFormElement} form - Form element
- * @param {string} submit - Submit URL
+ * @param {string} [submit] - Submit URL; without one, a demo notice is shown instead of sending
  * @param {Array<Object>} fields - Array of field configurations
  */
 function enableSubmission(form, submit, fields) {
-  form.dataset.action = submit;
+  if (submit) form.dataset.action = submit;
   const confirmation = fields.find((f) => f.type === 'confirmation');
   if (confirmation) {
     form.dataset.confirmation = confirmation.label || confirmation.default;
@@ -509,7 +524,8 @@ function enableSubmission(form, submit, fields) {
 
     const valid = form.reportValidity();
     if (valid) {
-      handleSubmit(form);
+      if (form.dataset.action) handleSubmit(form);
+      else showDemoNotice(form);
     } else {
       const firstInvalid = form.querySelector(':invalid:not(fieldset)');
       if (firstInvalid) {
@@ -633,7 +649,7 @@ function buildForm(fields, submit) {
 
   enableConditionals(form);
 
-  if (submit) enableSubmission(form, submit, fields);
+  enableSubmission(form, submit, fields);
 
   return form;
 }
