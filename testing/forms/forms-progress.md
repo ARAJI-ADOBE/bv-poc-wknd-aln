@@ -1,0 +1,42 @@
+# Forms POC: progress log
+
+Author: ALAN RAJI MANI (araji@adobe.com)
+Site: araji-adobe/bv-poc-wknd-aln (content in DA, code on GitHub)
+Code branch: `forms-poc` (not merged to main; preview only)
+Started: 4 Nov, 3:38 (user's local time). 24-hour target.
+
+Labels: Documented / Tested / Unsupported / Unknown
+
+## Steps
+
+| # | Step | Who | Result | Evidence |
+|---|---|---|---|---|
+| 0 | Identify the environment | Ema | Tested: DA content source, GitHub code, no form block | config + DA list |
+| 1 | Add the official form block on branch `forms-poc` | Ema | Tested: `/blocks/form/form.js` served on the branch preview (first push failed with a GitHub 500, the retry worked) | branch preview 200 |
+| 2 | Create the DA folder `forms-poc` | User | Tested | A01-da-forms-poc-folder.png |
+| 3 | Create the sheet `contact-form` | User | Tested | A02-da-contact-form-sheet-empty.png |
+| 4 | Type the header row | User | Tested: 6 headers correct | A03-da-contact-form-headers.png |
+| 5 | Type 5 field rows | User | Tested on the 2nd attempt. The 1st attempt didn't save. | A04-da-contact-form-fields.png, A04b |
+| 6 | Preview the sheet | User | Tested: JSON served on the main and forms-poc previews | A05-contact-form-json-preview.png |
+| 7 | Create the page `contact` (DA menu says "Page", not "Document") | User | Tested | A06-da-contact-page-empty.png |
+| 8–9 | Insert a block table (DA's default name is "columns") and rename it to `form` | User | Tested | A07, A08-da-contact-page-form-block.png |
+| 10 | Link the sheet in the block (`/forms-poc/contact-form.json`, a relative path accepted by DA) | User | Tested | A09-da-contact-page-form-link.png |
+| 11 | Preview the page; render it on the forms-poc branch | User + Ema | Tested: 4 fields + button render on the branch; all 4 are required and the empty form fails validation; the main preview shows no form (no block on main) | A10, A11 |
+| 11b | Submission | — | Not configured: there's no submit link, so the button has no submit target | — |
+| 12 | Decide on saving entries | User | Documented blocker. The Forms Submission Service (Experience League) needs the repo on an Adobe allowlist (process undocumented), the Adaptive Forms Block (not the simple form block), an `incoming` sheet shared with forms@adobe.com as "Anyone with the link can edit", and a form `{id}` (source undocumented). The user chose to stop and document it. | Experience League: forms-submission-service |
+| 13 | Form B: Ema generates the "Adventure Booking Request" sheet (8 rows: text, email, select, date, number, radio, checkbox, submit) and page | Ema | Tested in the browser: all 7 field types render with the forms-poc block code, all are required, the empty form is invalid. Ema timer started at 10:07 UTC (3:37 pm IST) | local files in content/forms-poc/ |
+| 14 | Upload Form B to DA and preview it (user approved) | Ema | Tested: DA returned 201 for both items; the DA sheet rows match the local file exactly (8/8); preview returned 200 for both; the branch page renders all fields. Finished at 10:10 UTC, so about 4 min of Ema work plus 2 user approval clicks | B01/B02 screenshots (user) |
+| 5b | Ema lost DA access (401) after the session restart; fixed by re-enabling Settings → LLM Permissions | User | Tested | A04c-settings-llm-permissions-on.png |
+
+## Defects found
+
+- D1 (Tested, 10:15 UTC): with no submit link in the block, form.js never attaches its submit handler. Clicking the button on an empty form gives no validation messages; the page reloads with `?name=&email=&message=`, so typed values (e.g. email) would end up in the URL. Affects both forms. The earlier "empty form is invalid" result was only `checkValidity()`, not what the visitor sees.
+  - Fix (user approved, branch only): commits 4d600dd and 26d5e95. The block always validates; with no submit URL it shows "Thank you. Demo only: your entry was not saved." and resets the form (select placeholders restored).
+  - Tested on the local preview, both forms. Form A: empty submit keeps the URL and focuses Full Name; a bad email focuses Email; valid input shows the notice. Form B: empty submit focuses Full name; then it stops at Experience level, then Consent; valid input shows the notice and the Adventure dropdown resets to "Choose an adventure".
+  - Push blocked at 10:16 UTC (no GitHub credentials after the session restart), so the branch preview still has the old code.
+- Note: the local preview's nav/footer links point to another site (edscapstoneajay). Demo from the branch preview, not the local one.
+
+## Form A (manual DA) observations for the comparison
+
+- Manual typing gave small text differences from the spec: "Full Name", "your full name", "General questions", "How can we help", "Send Message". All are cosmetic; the field names, types and required values are exact.
+- The first round of typing was lost (no DA save happened). This is a DA authoring risk to mention in the comparison.
