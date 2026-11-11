@@ -59,7 +59,7 @@ function buildLabel(text, type = 'label', id = null, required = false) {
  */
 function buildInput(field) {
   const {
-    type, field: fieldName, required, default: defaultValue, placeholder,
+    type, field: fieldName, required, default: defaultValue, placeholder, pattern, error,
   } = field;
 
   const input = createElement('input');
@@ -69,6 +69,9 @@ function buildInput(field) {
   input.required = required === 'true';
   if (defaultValue) input.value = defaultValue;
   if (placeholder) input.placeholder = placeholder;
+  if (pattern) input.pattern = pattern;
+  if (error) input.dataset.error = error;
+  if (type === 'tel') input.inputMode = 'numeric';
   return input;
 }
 
@@ -426,6 +429,11 @@ function enableConditionals(form) {
   form.addEventListener('change', (e) => {
     toggleConditional(e, controllerConfig);
   });
+
+  // re-apply visibility once reset() has restored the default values
+  form.addEventListener('reset', () => {
+    setTimeout(() => initConditionals(form, controllerConfig));
+  });
 }
 
 /**
@@ -458,6 +466,180 @@ function generatePayload(form) {
     }
   });
   return payload;
+}
+
+/**
+ * Returns the controls that take part in validation (one per radio/checkbox group)
+ * @param {HTMLElement} scope - Form or step element
+ * @returns {Array<HTMLElement>} Controls to validate
+ */
+function getValidatableControls(scope) {
+  const seen = new Set();
+  return [...scope.querySelectorAll('input, select, textarea')].filter((el) => {
+    if (!el.name || el.disabled || el.closest('[aria-hidden="true"]')) return false;
+    if (el.type === 'radio' || el.type === 'checkbox') {
+      if (seen.has(el.name)) return false;
+      seen.add(el.name);
+    }
+    return true;
+  });
+}
+
+/**
+ * Builds the message for an invalid control
+ * @param {HTMLElement} el - Form control
+ * @returns {string} Message, or '' when the control is valid
+ */
+function getErrorMessage(el) {
+  const group = (el.type === 'radio' || el.type === 'checkbox')
+    ? [...el.form.querySelectorAll(`[name="${el.name}"]`)] : [el];
+  if (group.every((g) => g.validity.valid)) return '';
+  const field = el.closest('.form-field');
+  const labelEl = field && field.querySelector('legend, label');
+  const label = labelEl ? labelEl.textContent.trim() : el.name;
+  if (group.some((g) => g.validity.valueMissing)) {
+    return (el.type === 'radio' || el.tagName === 'SELECT' || el.type === 'checkbox')
+      ? `Please choose ${label}.` : `Please enter ${label}.`;
+  }
+  return el.dataset.error || `Please check ${label}.`;
+}
+
+/**
+ * Shows or clears the inline message for one control
+ * @param {HTMLElement} el - Form control
+ * @returns {boolean} Whether the control is valid
+ */
+function updateFieldError(el) {
+  const field = el.closest('.form-field');
+  if (!field) return el.validity.valid;
+  const message = getErrorMessage(el);
+  const errorId = `${el.name}-error`;
+  let errorEl = field.querySelector('.field-error');
+  const targets = (el.type === 'radio' || el.type === 'checkbox')
+    ? [...field.querySelectorAll(`[name="${el.name}"]`)] : [el];
+  if (message) {
+    if (!errorEl) {
+      errorEl = createElement('p', 'field-error');
+      errorEl.id = errorId;
+      field.append(errorEl);
+    }
+    errorEl.textContent = message;
+    targets.forEach((t) => {
+      t.setAttribute('aria-invalid', 'true');
+      const describedBy = (t.getAttribute('aria-describedby') || '').split(' ').filter((d) => d);
+      if (!describedBy.includes(errorId)) t.setAttribute('aria-describedby', [...describedBy, errorId].join(' '));
+    });
+  } else {
+    if (errorEl) errorEl.remove();
+    targets.forEach((t) => {
+      t.removeAttribute('aria-invalid');
+      const describedBy = (t.getAttribute('aria-describedby') || '').split(' ').filter((d) => d && d !== errorId);
+      if (describedBy.length) t.setAttribute('aria-describedby', describedBy.join(' '));
+      else t.removeAttribute('aria-describedby');
+    });
+  }
+  return !message;
+}
+
+/**
+ * Validates every control in a scope and shows inline messages
+ * @param {HTMLElement} scope - Form or step element
+ * @returns {HTMLElement|null} First invalid control, or null when all are valid
+ */
+function validateScope(scope) {
+  let firstInvalid = null;
+  getValidatableControls(scope).forEach((el) => {
+    if (!updateFieldError(el) && !firstInvalid) firstInvalid = el;
+  });
+  return firstInvalid;
+}
+
+/**
+ * Fills the review panel with the values entered in the earlier steps
+ * @param {HTMLFormElement} form - Form element
+ * @param {HTMLElement} review - Review panel
+ */
+function renderReview(form, review) {
+  const list = createElement('dl', 'form-review-list');
+  getValidatableControls(form).forEach((el) => {
+    const field = el.closest('.form-field');
+    const labelEl = field && field.querySelector('legend, label');
+    let { value } = el;
+    if (el.type === 'radio' || el.type === 'checkbox') {
+      value = [...form.querySelectorAll(`[name="${el.name}"]:checked`)].map((c) => c.value).join(', ');
+    } else if (el.tagName === 'SELECT') {
+      value = el.selectedIndex >= 0 && el.value ? el.selectedOptions[0].textContent : '';
+    }
+    const dt = createElement('dt');
+    dt.textContent = labelEl ? labelEl.textContent.replace(/\*$/, '').trim() : el.name;
+    const dd = createElement('dd');
+    dd.textContent = value || '—';
+    list.append(dt, dd);
+  });
+  review.replaceChildren(list);
+}
+
+/**
+ * Shows one step of a multi-step form and updates the progress text
+ * @param {HTMLFormElement} form - Form element
+ * @param {number} index - Zero-based step index
+ * @param {boolean} [moveFocus=true] - Whether to move focus into the step
+ */
+function showStep(form, index, moveFocus = true) {
+  const steps = [...form.querySelectorAll('.form-step')];
+  steps.forEach((step, i) => { step.hidden = i !== index; });
+  form.dataset.currentStep = index;
+  const current = steps[index];
+  const review = current.querySelector('.form-review');
+  if (review) renderReview(form, review);
+  const progress = form.querySelector('.form-progress');
+  progress.textContent = `Step ${index + 1} of ${steps.length}: ${current.querySelector('legend').textContent}`;
+  if (moveFocus) {
+    const first = current.querySelector('input:not([type="hidden"]), select, textarea, button');
+    (first || progress).focus();
+  }
+}
+
+/**
+ * Groups fields into steps with Previous/Next navigation
+ * @param {HTMLFormElement} form - Form element
+ * @param {Array<HTMLElement>} steps - Step fieldsets in order
+ * @param {HTMLElement} buttonWrapper - Wrapper holding the submit button
+ */
+function enableSteps(form, steps, buttonWrapper) {
+  const progress = createElement('p', 'form-progress');
+  progress.setAttribute('aria-live', 'polite');
+  progress.tabIndex = -1;
+  form.prepend(progress);
+
+  steps.forEach((step, i) => {
+    const nav = createElement('div', 'button-wrapper form-step-nav');
+    if (i > 0) {
+      const prev = createElement('button', 'button secondary');
+      prev.type = 'button';
+      prev.textContent = 'Previous';
+      prev.addEventListener('click', () => showStep(form, i - 1));
+      nav.append(prev);
+    }
+    if (i < steps.length - 1) {
+      const next = createElement('button', 'button');
+      next.type = 'button';
+      next.textContent = 'Next';
+      next.addEventListener('click', () => {
+        const firstInvalid = validateScope(step);
+        if (firstInvalid) firstInvalid.focus();
+        else showStep(form, i + 1);
+      });
+      nav.append(next);
+    } else if (buttonWrapper) {
+      nav.append(...buttonWrapper.children);
+      buttonWrapper.remove();
+    }
+    step.append(nav);
+  });
+
+  form.dataset.steps = steps.length;
+  showStep(form, 0, false);
 }
 
 /**
@@ -527,31 +709,48 @@ function enableSubmission(form, submit, fields) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const valid = form.reportValidity();
-    if (valid) {
+    // multi-step forms only submit from the last step (e.g. Enter in an early field does nothing)
+    const stepCount = Number(form.dataset.steps || 0);
+    if (stepCount && Number(form.dataset.currentStep) !== stepCount - 1) return;
+
+    let firstInvalid = null;
+    if (form.dataset.inlineErrors) {
+      firstInvalid = validateScope(form);
+      const step = firstInvalid && firstInvalid.closest('.form-step');
+      if (step && step.hidden) showStep(form, [...form.querySelectorAll('.form-step')].indexOf(step));
+    } else if (!form.reportValidity()) {
+      firstInvalid = form.querySelector(':invalid:not(fieldset)');
+    }
+
+    if (!firstInvalid) {
       if (form.dataset.action) handleSubmit(form);
       else {
         form.reset();
+        if (stepCount) showStep(form, 0);
         showNotice(form, 'Thank you. Demo only: your entry was not saved.');
       }
     } else {
-      const firstInvalid = form.querySelector(':invalid:not(fieldset)');
-      if (firstInvalid) {
-        firstInvalid.focus();
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        firstInvalid.setAttribute('aria-invalid', true);
-      }
+      firstInvalid.focus();
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstInvalid.setAttribute('aria-invalid', true);
     }
   });
 
-  // clear aria-invalid on field change
+  // update aria-invalid (and inline messages, when enabled) on field change
   form.addEventListener('input', (e) => {
-    if (e.target.hasAttribute('aria-invalid')) {
+    if (form.dataset.inlineErrors && e.target.hasAttribute('aria-invalid')) {
+      updateFieldError(e.target);
+    } else if (e.target.hasAttribute('aria-invalid')) {
       if (e.target.validity.valid) {
         e.target.removeAttribute('aria-invalid');
       }
     }
   });
+  if (form.dataset.inlineErrors) {
+    form.addEventListener('change', (e) => {
+      if (e.target.hasAttribute('aria-invalid')) updateFieldError(e.target);
+    });
+  }
 }
 
 /**
@@ -637,23 +836,44 @@ function buildForm(fields, submit) {
   const form = createElement('form');
   form.setAttribute('novalidate', '');
 
+  // inline messages are opt-in: only forms that use the newer columns or steps get them
+  if (fields.some((f) => f.error || f.pattern || f.type === 'step')) form.dataset.inlineErrors = 'true';
+
   // group buttons at the end
   const buttons = [];
+  // a "step" row starts a new step; the rows after it belong to that step
+  const steps = [];
+  let container = form;
 
   fields.forEach((field) => {
     if (field.type === 'submit' || field.type === 'reset') {
       buttons.push(field);
+    } else if (field.type === 'step') {
+      const step = createElement('fieldset', 'form-step');
+      const legend = createElement('legend');
+      legend.textContent = field.label;
+      step.append(legend);
+      form.append(step);
+      steps.push(step);
+      container = step;
+    } else if (field.type === 'review') {
+      const review = createElement('div', 'form-review');
+      review.setAttribute('aria-label', field.label || 'Review your details');
+      container.append(review);
     } else if (field.type !== 'confirmation') {
-      form.append(buildField(field));
+      container.append(buildField(field));
     }
   });
 
   // add buttons in a wrapper (if any)
+  let buttonWrapper = null;
   if (buttons.length) {
-    const buttonWrapper = createElement('div', 'button-wrapper');
+    buttonWrapper = createElement('div', 'button-wrapper');
     buttons.forEach((button) => buttonWrapper.append(buildField(button)));
     form.append(buttonWrapper);
   }
+
+  if (steps.length) enableSteps(form, steps, buttonWrapper);
 
   enableConditionals(form);
 

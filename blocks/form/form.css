@@ -243,3 +243,44 @@
   background-color: var(--light-color);
   font-size: var(--body-font-size-s);
 }
+
+.form .field-error {
+  margin: 0.25em 0 0;
+  color: firebrick;
+  font-size: var(--body-font-size-xs);
+}
+
+.form [aria-invalid='true'] {
+  border-color: firebrick;
+}
+
+.form .form-progress {
+  margin: 0 0 1em;
+  font-weight: bold;
+}
+
+.form .form-step[hidden] {
+  display: none;
+}
+
+.form .form-step > legend {
+  margin-bottom: 0.5em;
+  font-size: var(--heading-font-size-m);
+  font-weight: bold;
+}
+
+.form .form-review-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25em 1em;
+  margin: 0;
+}
+
+.form .form-review-list dt {
+  font-weight: bold;
+}
+
+.form .form-review-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
