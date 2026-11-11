@@ -724,7 +724,10 @@ function enableSubmission(form, submit, fields) {
 
     if (!firstInvalid) {
       if (form.dataset.action) handleSubmit(form);
-      else {
+      else if (form.dataset.confirmation) {
+        // demo mode with a confirmation row: nothing is sent, but show the confirmation page
+        window.location.href = form.dataset.confirmation;
+      } else {
         form.reset();
         if (stepCount) showStep(form, 0);
         showNotice(form, 'Thank you. Demo only: your entry was not saved.');
