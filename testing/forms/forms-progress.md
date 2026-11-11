@@ -43,6 +43,8 @@ Labels: Documented / Tested / Unsupported / Unknown
 
 | 26 | 11 Nov. Advanced forms extension: a new separate form (user choice). Ema generated sheet `advanced-form` (15 rows: 3 steps, review, pattern/error columns, conditional Business fields) and page `advanced`; extended the block with opt-in pattern, error, step and review (commit 28b5d8e, local); tested locally (see advanced-capability-matrix.md) | Ema | Pass (local) | F01–F06 |
 | 27 | Upload + preview of advanced-form and advanced (user approved) | Ema | Tested: DA 201 ×2, rows 15/15 match, preview 200 ×2, the served sheet keeps the patterns intact. The code push is still pending, so the branch preview has old code | — |
+| 28 | Sync push of 28b5d8e + docs (user); live retest of Tests 1–3 on the branch preview | User + Ema | Pass (live), G01–G05; .hlxignore (catalog/) was pushed too | A17 |
+| 29 | Test 4: confirmation page (user approved): code 95ba1a6 (local), sheet row + new page advanced-thank-you uploaded and previewed (approved) | Ema | Pass (local); the live test needs a Sync push | — |
 
 ## Defects found
 

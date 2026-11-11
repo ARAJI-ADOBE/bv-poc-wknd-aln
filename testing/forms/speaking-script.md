@@ -1,8 +1,8 @@
 # Speaking script: Forms on EDS, DA by hand vs Ema
 
-Presenter: ALAN RAJI MANI (araji@adobe.com) · about 19 minutes (including a 3-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
+Presenter: ALAN RAJI MANI (araji@adobe.com) · about 23 minutes (including a 3-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
 
-## Slide 1: Forms on Edge Delivery Services (title)
+## Slide 1: Forms on Edge Delivery Services
 
 **SAY:**
 Over the last day I built two forms on our Edge Delivery Services sandbox. I built one by hand in DA.live and had Ema, the Experience Modernization Agent, build the other. They solve different business problems, but they run on the same form block and the same site and went through the same four tests, so the comparison is fair. Everything I show is labelled Tested, Documented, Limitation or Unknown.
@@ -165,14 +165,53 @@ This is fine for a POC. For production, add spam protection and choose between P
 Tested: trigger, CORS, 202, rows in Excel. Documented: AEM Forms requirements. Limitation: open endpoint, Microsoft Premium.
 
 **TRANSITION:**
-So when should you use which approach?
+Next: how far can Ema go with advanced forms?
 
 **LIKELY QUESTIONS AND ANSWERS:**
 Q: Is the address secret? A: No. It is in the page source, so anyone could post to it. That is why production needs spam protection or a server-side relay.
 
 *TIME: 1:30*
 
-## Slide 12: When to use DA by hand, and when to use Ema
+## Slide 12: Can Ema build advanced forms from business requirements?
+
+**SAY:**
+We then asked whether Ema can turn plain business requirements into an advanced form. It covered validation rules, a three-step wizard and fields that appear only for business enquiries. All three passed on the live branch preview. Conditional fields worked with sheet rows alone. Format rules, field messages and steps needed the form block to be extended. Ema wrote that code, tested it and made it opt-in, so the earlier forms did not change. Testing also found one bug, which was fixed and retested.
+
+**EVIDENCE LABELS:**
+Tested: every row on the forms-poc branch preview on 11 Nov (G01 to G05).
+
+**TRANSITION:**
+Here is the requirement-by-requirement matrix.
+
+*TIME: 1:30*
+
+## Slide 13: Capability matrix
+
+**SAY:**
+This is the requirement-by-requirement view. Every rule was tested with good and bad test values. For example, a phone number with a space is rejected and the message explains the rule, but what the user typed is left untouched. Two rows were tested locally only: keyboard and mobile. A real screen-reader check is still open.
+
+**EVIDENCE LABELS:**
+Pass = tested live on the branch preview. Pass (local) = tested in the browser with the branch code before the upload.
+
+**TRANSITION:**
+And this is what a visitor sees.
+
+*TIME: 1:30*
+
+## Slide 14: What the visitor sees, and what comes next
+
+**SAY:**
+On the left, step one with an error under every missing field. On the right, the review step just before submitting. Optional extras such as calculated fields, dynamic dropdowns and a confirmation page were not built. They are waiting for approval. Two of them are already in the block and would only need sheet rows.
+
+**CLICK / DEMONSTRATE:**
+Live: https://forms-poc--bv-poc-wknd-aln--araji-adobe.aem.page/forms-poc/advanced
+
+**TRANSITION:**
+So when should you use which approach?
+
+*TIME: 1:00*
+
+## Slide 15: When to use DA by hand, and when to use Ema
 
 **SAY:**
 My recommendation is to use both. Ema drafts the form fast and accurately. The author reviews the sheet in DA, previews it and runs the four tests. DA by hand stays the fallback for small changes and for times when the agent has no access.
@@ -182,7 +221,7 @@ Let me show you both forms live.
 
 *TIME: 1:00*
 
-## Slide 13: Demo order (3 minutes)
+## Slide 16: Demo order (3 minutes)
 
 **SAY:**
 Five quick stops. The DA folder, the sheet as data, Form A failing validation, Form B succeeding, and the code branch.
@@ -195,7 +234,7 @@ Both forms come from sheets; the code is on a branch; nothing is live.
 
 *TIME: 3:00*
 
-## Slide 14: From POC to production
+## Slide 17: From POC to production
 
 **SAY:**
 To go to production: confirm the licence and allowlist, trial the submission service, merge the branch through a normal pull request, and publish through our usual process. The SOP and the four tests are reusable for every future form.
@@ -205,6 +244,6 @@ Questions.
 
 *TIME: 0:45*
 
-## Slide 15: Sources and evidence
+## Slide 18: Sources and evidence
 
 Reference slide, not presented.

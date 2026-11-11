@@ -406,8 +406,80 @@ const URL = {
     explain: 'This is fine for a POC. For production, add spam protection and choose between Power Automate Premium and AEM Forms.',
     labels: 'Tested: trigger, CORS, 202, rows in Excel. Documented: AEM Forms requirements. Limitation: open endpoint, Microsoft Premium.',
     qa: 'Q: Is the address secret? A: No. It is in the page source, so anyone could post to it. That is why production needs spam protection or a server-side relay.',
-    transition: 'So when should you use which approach?',
+    transition: 'Next: how far can Ema go with advanced forms?',
     time: '1:30',
+  }));
+}
+
+// ---------------------------------------------------------------- 10b Advanced forms: summary
+{
+  const s = base('Advanced Forms Capabilities', 'Can Ema build advanced forms from business requirements?');
+  table(s, [
+    ['Test', 'Requirement (plain language)', 'How Ema did it', 'Result'],
+    ['1 Validation', 'Name: letters, spaces, - and \'. Email: name@example.com. Phone: exactly 10 digits. Address required. A message under each field.', 'Sheet + Ema code (new pattern and error columns)', T('Pass (live)')],
+    ['2 Multi-step', '3 steps (Personal / Address / Review), Next and Previous, progress, values kept, submit only at the end, Enter does not advance', 'Sheet + Ema code (new step and review rows)', T('Pass (live)')],
+    ['3 Conditional', 'Business shows Company (required) and Job title; Personal hides them and they do not block', 'Sheet only: the block already supported it', T('Pass (live)')],
+    ['Bug found', 'After submit, the Business fields stayed visible on the cleared form', 'Ema code fix, retested', T('Fixed')],
+    ['Regression', 'Forms A and B unchanged (new features are opt-in per sheet)', '—', T('Pass (live)')],
+  ], { colW: [1.6, 5.9, 3.0, 1.8], fontSize: 11 });
+  bullets(s, [
+    { text: 'Manual intervention: 1 approval (DA upload + preview) and 1 Sync push by the author. No hand-typed rows or fixes.', bold: true },
+    'Finding: the free form block covers required, email and conditional fields. Format rules, custom messages and steps needed a code extension, which Ema wrote, tested and kept opt-in.',
+    'Test data only (Test User, test.user@example.com, 9876543210).',
+  ], { y: 4.9, h: 1.6, fontSize: 12 });
+  legend(s);
+  s.addNotes(notes({
+    say: 'We then asked whether Ema can turn plain business requirements into an advanced form. It covered validation rules, a three-step wizard and fields that appear only for business enquiries. All three passed on the live branch preview. Conditional fields worked with sheet rows alone. Format rules, field messages and steps needed the form block to be extended. Ema wrote that code, tested it and made it opt-in, so the earlier forms did not change. Testing also found one bug, which was fixed and retested.',
+    labels: 'Tested: every row on the forms-poc branch preview on 11 Nov (G01 to G05).',
+    transition: 'Here is the requirement-by-requirement matrix.',
+    time: '1:30',
+  }));
+}
+
+// ---------------------------------------------------------------- 10c Advanced forms: matrix
+{
+  const s = base('Advanced Forms Capabilities', 'Capability matrix');
+  table(s, [
+    ['Requirement', 'Ema configuration', 'Tested behaviour', 'Status', 'Manual', 'Limitation'],
+    ['Full name rule', 'pattern + error', '"John3", "J@ne Doe" rejected; "Mary-Jane O\'Neil" OK', T('Pass'), 'None', 'A–Z letters only'],
+    ['Email format', 'type email + pattern', '"name@example" rejected (the browser alone accepts it)', T('Pass'), 'None', '—'],
+    ['Phone: 10 digits', 'type tel + pattern + help', 'Letters, 5 digits, 11 digits, spaces rejected; value kept as typed', T('Pass'), 'None', 'No country code'],
+    ['Address', 'required + pattern', 'Empty and "<…>" rejected', T('Pass'), 'None', 'Also allows \' # /'],
+    ['Field messages', 'inline errors (opt-in)', '4 messages at once; focus on the first', T('Pass'), 'None', '—'],
+    ['Steps + progress', 'step rows', '"Step 1 of 3" … "Step 3 of 3"', T('Pass'), 'None', '—'],
+    ['Next validates / Previous keeps', 'built-in', 'Blocked while invalid; values kept both ways', T('Pass'), 'None', '—'],
+    ['Review step', 'review row', 'All answers listed; hidden fields left out', T('Pass'), 'None', 'Read-only'],
+    ['No early submit / Enter', 'submit only in step 3', 'Enter in steps 1–2: no move, no submit', T('Pass'), 'None', 'Enter does not advance'],
+    ['Keyboard', 'native buttons', 'Tab to Next, Enter moves on', T('Pass (local)'), 'None', 'Screen reader not tested'],
+    ['Business / Personal', 'conditional column', 'Company required only for Business', T('Pass'), 'None', 'Condition syntax'],
+    ['Mobile 375 px', 'existing CSS', 'No sideways scroll', T('Pass (local)'), 'None', '—'],
+  ], { colW: [2.0, 1.9, 4.0, 1.1, 0.8, 2.5], fontSize: 9 });
+  s.addText('Full matrix with evidence: testing/forms/advanced-capability-matrix.md', { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 9, color: GREY });
+  s.addNotes(notes({
+    say: 'This is the requirement-by-requirement view. Every rule was tested with good and bad test values. For example, a phone number with a space is rejected and the message explains the rule, but what the user typed is left untouched. Two rows were tested locally only: keyboard and mobile. A real screen-reader check is still open.',
+    labels: 'Pass = tested live on the branch preview. Pass (local) = tested in the browser with the branch code before the upload.',
+    transition: 'And this is what a visitor sees.',
+    time: '1:30',
+  }));
+}
+
+// ---------------------------------------------------------------- 10d Advanced forms: screenshots + test 4
+{
+  const s = base('Advanced Forms Capabilities', 'What the visitor sees, and what comes next');
+  img(s, 'G02-live-advanced-empty-errors.png', 0.5, 1.6, 6.0, 2.6, 1280, 641, 'Step 1: a message under every missing field');
+  img(s, 'G04-live-review.png', 6.8, 1.6, 6.0, 2.6, 1280, 451, 'Step 3: review of all answers before submitting');
+  table(s, [
+    ['Optional (Test 4)', 'Current status', 'Needs'],
+    ['Calculated fields', U('Not supported'), 'Ema code'],
+    ['Dynamic dropdowns', U('In the block (options from another sheet), untested'), 'Sheet only'],
+    ['Submission confirmation', U('In the block (redirect row), untested'), 'Sheet only'],
+    ['Accessibility audit', U('ARIA + focus done; screen reader not tested'), 'Manual test'],
+  ], { y: 4.75, colW: [3.0, 6.3, 3.0], fontSize: 10 });
+  s.addNotes(notes({
+    say: 'On the left, step one with an error under every missing field. On the right, the review step just before submitting. Optional extras such as calculated fields, dynamic dropdowns and a confirmation page were not built. They are waiting for approval. Two of them are already in the block and would only need sheet rows.',
+    click: 'Live: https://forms-poc--bv-poc-wknd-aln--araji-adobe.aem.page/forms-poc/advanced',
+    transition: 'So when should you use which approach?',
+    time: '1:00',
   }));
 }
 
@@ -444,7 +516,8 @@ const URL = {
     ['3', URL.a, 'Form A: Send empty (T1), bad email (T2), then a real entry'],
     ['4', URL.b, 'Form B: fill it in and send (T4): demo notice'],
     ['5', 'Excel: wknd-contact-submissions (OneDrive)', 'The live entry from step 3 arrives as a new row'],
-    ['6', URL.gh, 'Code branch: form block + fixes, main untouched'],
+    ['6', `${BR}/forms-poc/advanced`, 'Advanced form: errors, Business fields, 3 steps, review'],
+    ['7', URL.gh, 'Code branch: form block + fixes, main untouched'],
   ], { colW: [0.5, 7.4, 4.4], fontSize: 11 });
   s.addText('Backup if the network fails: figures on slides 6–8 show the same states.', { x: 0.5, y: 5.6, w: 12.3, h: 0.4, fontFace: FONT, fontSize: 12, color: GREY });
   s.addNotes(notes({
