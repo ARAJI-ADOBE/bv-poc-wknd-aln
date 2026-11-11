@@ -472,11 +472,11 @@ const URL = {
     ['Optional (Test 4)', 'Current status', 'Needs'],
     ['Calculated fields', U('Not supported'), 'Ema code'],
     ['Dynamic dropdowns', U('In the block (options from another sheet), untested'), 'Sheet only'],
-    ['Submission confirmation', U('In the block (redirect row), untested'), 'Sheet only'],
+    ['Submission confirmation', T('Pass (live): Submit opens /forms-poc/advanced-thank-you'), 'Sheet row + 3 lines of Ema code'],
     ['Accessibility audit', U('ARIA + focus done; screen reader not tested'), 'Manual test'],
   ], { y: 4.75, colW: [3.0, 6.3, 3.0], fontSize: 10 });
   s.addNotes(notes({
-    say: 'On the left, step one with an error under every missing field. On the right, the review step just before submitting. Optional extras such as calculated fields, dynamic dropdowns and a confirmation page were not built. They are waiting for approval. Two of them are already in the block and would only need sheet rows.',
+    say: 'On the left, step one with an error under every missing field. On the right, the review step just before submitting. Of the optional extras, the confirmation page was approved and built. The block only followed a confirmation row after a real send, so Ema added a three-line opt-in change, and Submit now opens a thank-you page. Calculated fields and dynamic dropdowns were not built.',
     click: 'Live: https://forms-poc--bv-poc-wknd-aln--araji-adobe.aem.page/forms-poc/advanced',
     transition: 'So when should you use which approach?',
     time: '1:00',
@@ -508,23 +508,26 @@ const URL = {
 
 // ---------------------------------------------------------------- 12 Demo
 {
-  const s = base('Live demo', 'Demo order (3 minutes)');
+  const s = base('Live demo', 'End-to-end demo flow (about 6 minutes)');
   table(s, [
-    ['#', 'Open', 'Show'],
-    ['1', URL.da, 'The forms-poc folder: 2 sheets + 2 pages'],
-    ['2', URL.aj, 'Sheet → JSON: the data the form is built from'],
-    ['3', URL.a, 'Form A: Send empty (T1), bad email (T2), then a real entry'],
-    ['4', URL.b, 'Form B: fill it in and send (T4): demo notice'],
-    ['5', 'Excel: wknd-contact-submissions (OneDrive)', 'The live entry from step 3 arrives as a new row'],
-    ['6', `${BR}/forms-poc/advanced`, 'Advanced form: errors, Business fields, 3 steps, review'],
-    ['7', URL.gh, 'Code branch: form block + fixes, main untouched'],
-  ], { colW: [0.5, 7.4, 4.4], fontSize: 11 });
-  s.addText('Backup if the network fails: figures on slides 6–8 show the same states.', { x: 0.5, y: 5.6, w: 12.3, h: 0.4, fontFace: FONT, fontSize: 12, color: GREY });
+    ['#', 'Open', 'Show and say'],
+    ['1', 'da.live → bv-poc-wknd-aln → forms-poc', 'One folder: 3 sheets (the fields) + 4 pages. "Every form is a sheet plus a page."'],
+    ['2', 'contact-form sheet', 'The 6 lowercase columns: field, label, type, placeholder, options, required. "Form A, typed by hand."'],
+    ['3', 'contact page in DA', 'The form block table: cell 1 = sheet link, cell 2 = Power Automate address'],
+    ['4', `${BR}/forms-poc/contact`, 'Send empty (focus jumps to Full Name), then a real test entry → "Thank you. Your entry was received."'],
+    ['5', 'Excel: wknd-contact-submissions (OneDrive)', 'The new row appears: saved without AEM Forms'],
+    ['6', `${BR}/forms-poc/booking`, 'Form B by Ema: 7 field types from one request'],
+    ['7', `${BR}/forms-poc/advanced`, 'Type John3 → letters-only message; phone 98765 → 10-digit rule; Business → Company required; Personal → hidden'],
+    ['8', 'advanced: Next / Previous / review', 'Step 1 of 3 → 2 → Previous keeps values → review lists all answers'],
+    ['9', 'Submit enquiry', 'Opens the thank-you page (confirmation row)'],
+    ['10', URL.gh, 'All code on the forms-poc branch; main and the live site untouched'],
+  ], { colW: [0.45, 4.6, 7.25], fontSize: 10 });
+  s.addText('Test data only (Test User, test.user@example.com, 9876543210). Backup if the network fails: figures on slides 6–8, 11 and 14.', { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 10, color: GREY });
   s.addNotes(notes({
-    say: 'Five quick stops. The DA folder, the sheet as data, Form A failing validation, Form B succeeding, and the code branch.',
-    click: 'Open each link in order, in a browser tab prepared before the session.',
-    observe: 'Both forms come from sheets; the code is on a branch; nothing is live.',
-    time: '3:00',
+    say: 'Let me show the whole journey, from the DA folder to the saved entry and the advanced form. Everything is preview only on the forms-poc branch, with test data.',
+    click: 'Open the tabs in this order. Prepare all of them before the session. On Form A use test data only, because it really writes a row to OneDrive.',
+    observe: 'Forms are sheets plus a page; Form A saves to Excel; the advanced form validates, branches and steps; Submit opens the thank-you page.',
+    time: '6:00',
   }));
 }
 

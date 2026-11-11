@@ -1,6 +1,6 @@
 # Speaking script: Forms on EDS, DA by hand vs Ema
 
-Presenter: ALAN RAJI MANI (araji@adobe.com) · about 23 minutes (including a 3-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
+Presenter: ALAN RAJI MANI (araji@adobe.com) · about 26 minutes (including a 6-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
 
 ## Slide 1: Forms on Edge Delivery Services
 
@@ -201,7 +201,7 @@ And this is what a visitor sees.
 ## Slide 14: What the visitor sees, and what comes next
 
 **SAY:**
-On the left, step one with an error under every missing field. On the right, the review step just before submitting. Optional extras such as calculated fields, dynamic dropdowns and a confirmation page were not built. They are waiting for approval. Two of them are already in the block and would only need sheet rows.
+On the left, step one with an error under every missing field. On the right, the review step just before submitting. Of the optional extras, the confirmation page was approved and built. The block only followed a confirmation row after a real send, so Ema added a three-line opt-in change, and Submit now opens a thank-you page. Calculated fields and dynamic dropdowns were not built.
 
 **CLICK / DEMONSTRATE:**
 Live: https://forms-poc--bv-poc-wknd-aln--araji-adobe.aem.page/forms-poc/advanced
@@ -221,18 +221,18 @@ Let me show you both forms live.
 
 *TIME: 1:00*
 
-## Slide 16: Demo order (3 minutes)
+## Slide 16: End-to-end demo flow (about 6 minutes)
 
 **SAY:**
-Five quick stops. The DA folder, the sheet as data, Form A failing validation, Form B succeeding, and the code branch.
+Let me show the whole journey, from the DA folder to the saved entry and the advanced form. Everything is preview only on the forms-poc branch, with test data.
 
 **CLICK / DEMONSTRATE:**
-Open each link in order, in a browser tab prepared before the session.
+Open the tabs in this order. Prepare all of them before the session. On Form A use test data only, because it really writes a row to OneDrive.
 
 **AUDIENCE SHOULD OBSERVE:**
-Both forms come from sheets; the code is on a branch; nothing is live.
+Forms are sheets plus a page; Form A saves to Excel; the advanced form validates, branches and steps; Submit opens the thank-you page.
 
-*TIME: 3:00*
+*TIME: 6:00*
 
 ## Slide 17: From POC to production
 
