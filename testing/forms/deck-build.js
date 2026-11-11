@@ -18,7 +18,7 @@ const pptx = new PptxGenJS();
 pptx.layout = 'LAYOUT_WIDE'; // 13.33 x 7.5 in
 pptx.author = 'ALAN RAJI MANI';
 pptx.company = 'Adobe';
-pptx.title = 'Forms on Edge Delivery Services: DA by hand vs Ema';
+pptx.title = 'FORMS POC - DA vs EMA';
 pptx.subject = 'Forms POC on bv-poc-wknd-aln, tested 4–5 Nov 2026';
 
 const W = 13.33;
@@ -143,7 +143,7 @@ const URL = {
   s.background = { color: 'FFFFFF' };
   s.addImage({ path: EV + 'adobe-logo.png', x: 0.6, y: 0.6, w: 1.66, h: 0.4, altText: 'Adobe' });
   s.addText('EDS  ·  DA.LIVE  ·  EMA', { x: 0.6, y: 1.9, w: 12, h: 0.35, fontFace: FONT, fontSize: 13, bold: true, color: RED, charSpacing: 1 });
-  s.addText('Forms on Edge Delivery Services', { x: 0.6, y: 2.3, w: 12, h: 0.9, fontFace: FONT, fontSize: 40, bold: true, color: DARK });
+  s.addText('FORMS POC - DA vs EMA', { x: 0.6, y: 2.3, w: 12, h: 0.9, fontFace: FONT, fontSize: 40, bold: true, color: DARK });
   s.addText('Two working forms, built two ways: by hand in DA.live and with Ema. Same block, same site, same tests.', { x: 0.6, y: 3.2, w: 11.5, h: 0.6, fontFace: FONT, fontSize: 18, color: GREY });
   s.addShape(pptx.ShapeType.rect, { x: 0.6, y: 4.05, w: 1.2, h: 0.06, fill: { color: RED }, line: { color: RED } });
   s.addText([
@@ -160,7 +160,7 @@ const URL = {
 
 // ---------------------------------------------------------------- 2 Goal
 {
-  const s = base('Goal', 'What we set out to prove in 24 hours');
+  const s = base('Goal', 'What we set out to prove');
   table(s, [
     ['', 'Form A: Contact WKND', 'Form B: Adventure Booking Request'],
     ['Business use case', 'General enquiries: questions, partnerships, feedback', 'A visitor requests a specific trip on a specific date'],
@@ -259,7 +259,7 @@ const URL = {
 
 // ---------------------------------------------------------------- 5 Form A
 {
-  const s = base('Form A · DA.live by hand', 'Contact WKND: 10 author steps, about 35 minutes');
+  const s = base('Form A · DA.live by hand', 'Contact WKND: built by hand in 10 author steps');
   bullets(s, [
     'Create folder forms-poc',
     'Create sheet contact-form (the menu says "Sheet")',
@@ -287,7 +287,7 @@ const URL = {
 
 // ---------------------------------------------------------------- 6 Form B
 {
-  const s = base('Form B · Ema', 'Adventure Booking Request: 1 prompt, 2 approvals, about 4 minutes');
+  const s = base('Form B · Ema', 'Adventure Booking Request: 1 request, 2 approvals');
   bullets(s, [
     'Ema read the site\'s real adventure list and chose 6 WKND trips for the dropdown',
     'Generated the sheet (8 rows, 7 field types) and the page with the same structure as Form A',
@@ -508,7 +508,7 @@ const URL = {
 
 // ---------------------------------------------------------------- 12 Demo
 {
-  const s = base('Live demo', 'End-to-end demo flow (about 6 minutes)');
+  const s = base('Live demo', 'End-to-end demo flow');
   table(s, [
     ['#', 'Open', 'Show and say'],
     ['1', 'da.live → bv-poc-wknd-aln → forms-poc', 'One folder: 3 sheets (the fields) + 4 pages. "Every form is a sheet plus a page."'],

@@ -1,8 +1,8 @@
-# Speaking script: Forms on EDS, DA by hand vs Ema
+# Speaking script: FORMS POC - DA vs EMA
 
 Presenter: ALAN RAJI MANI (araji@adobe.com) · about 26 minutes (including a 6-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
 
-## Slide 1: Forms on Edge Delivery Services
+## Slide 1: FORMS POC - DA vs EMA
 
 **SAY:**
 Over the last day I built two forms on our Edge Delivery Services sandbox. I built one by hand in DA.live and had Ema, the Experience Modernization Agent, build the other. They solve different business problems, but they run on the same form block and the same site and went through the same four tests, so the comparison is fair. Everything I show is labelled Tested, Documented, Limitation or Unknown.
@@ -12,7 +12,7 @@ First, what we set out to prove.
 
 *TIME: 0:30*
 
-## Slide 2: What we set out to prove in 24 hours
+## Slide 2: What we set out to prove
 
 **SAY:**
 Form A is a simple contact form, the kind of thing an author types up. Form B is a booking request with seven field types, which gives Ema something harder. To keep it fair, both use the same block on the same branch and are tested the same way. This is a shared environment, so nothing existing was changed and nothing was published live.
@@ -64,7 +64,7 @@ Here is Form A, built by hand.
 
 *TIME: 1:00*
 
-## Slide 6: Contact WKND: 10 author steps, about 35 minutes
+## Slide 6: Contact WKND: built by hand in 10 author steps
 
 **SAY:**
 Form A took ten author steps and about thirty-five minutes of hands-on time. Two things caught us out. DA calls the item "Page", not "Document". The default table is called columns and has to be renamed to form. The first round of typing the rows never saved, so we lost it and retyped it.
@@ -83,7 +83,7 @@ Now the same job done by Ema, on a harder form.
 
 *TIME: 1:30*
 
-## Slide 7: Adventure Booking Request: 1 prompt, 2 approvals, about 4 minutes
+## Slide 7: Adventure Booking Request: 1 request, 2 approvals
 
 **SAY:**
 For Form B I gave Ema one request. It used the real adventure names from the site, generated the sheet and page, and test-rendered them before touching DA. It then asked me before uploading. The upload matched the local copy exactly. Hands-on time was about four minutes plus two approval clicks. Ema still needs a human: after the overnight restart it lost DA and GitHub access, and I had to push the code myself with the Sync button.
@@ -221,7 +221,7 @@ Let me show you both forms live.
 
 *TIME: 1:00*
 
-## Slide 16: End-to-end demo flow (about 6 minutes)
+## Slide 16: End-to-end demo flow
 
 **SAY:**
 Let me show the whole journey, from the DA folder to the saved entry and the advanced form. Everything is preview only on the forms-poc branch, with test data.
