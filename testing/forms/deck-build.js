@@ -148,7 +148,7 @@ const URL = {
   s.addShape(pptx.ShapeType.rect, { x: 0.6, y: 4.05, w: 1.2, h: 0.06, fill: { color: RED }, line: { color: RED } });
   s.addText([
     { text: 'ALAN RAJI MANI', options: { bold: true, breakLine: true } },
-    { text: 'araji@adobe.com  ·  5 Nov 2026', options: { color: GREY } },
+    { text: 'araji@adobe.com  ·  11 Nov 2026', options: { color: GREY } },
   ], { x: 0.6, y: 4.3, w: 8, h: 0.8, fontFace: FONT, fontSize: 14, color: DARK });
   footer(s);
   s.addNotes(notes({
@@ -402,7 +402,7 @@ const URL = {
   s.addText(`Adobe docs: ${URL.docSubmit}`, { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 9, color: BLUE });
   s.addNotes(notes({
     say: 'We wanted entries saved in OneDrive without paying for AEM Forms. Adobe\'s own submission service needs an AEM Forms licence. Instead, the form sends each entry to a Microsoft Power Automate flow, which adds a row to an Excel table in OneDrive. The form block already supports a submit address, so sending needed no code change, only the address in the second cell of the block table. Both my test entry and a live entry from the website arrived in Excel.',
-    click: 'Show the Excel file wknd-contact-submissions with rows 2 and 3.',
+    click: 'Show the flow in make.powerautomate.com (trigger + Add a row into a table), its Run history, then the Excel file wknd-contact-submissions with its rows.',
     explain: 'This is fine for a POC. For production, add spam protection and choose between Power Automate Premium and AEM Forms.',
     labels: 'Tested: trigger, CORS, 202, rows in Excel. Documented: AEM Forms requirements. Limitation: open endpoint, Microsoft Premium.',
     qa: 'Q: Is the address secret? A: No. It is in the page source, so anyone could post to it. That is why production needs spam protection or a server-side relay.',
@@ -478,6 +478,78 @@ const URL = {
   s.addNotes(notes({
     say: 'On the left, step one with an error under every missing field. On the right, the review step just before submitting. Of the optional extras, the confirmation page was approved and built. The block only followed a confirmation row after a real send, so Ema added a three-line opt-in change, and Submit now opens a thank-you page. Calculated fields and dynamic dropdowns were not built.',
     click: 'Live: https://forms-poc--bv-poc-wknd-aln--araji-adobe.aem.page/forms-poc/advanced',
+    transition: 'Next: the same tests with Experience Workspace.',
+    time: '1:00',
+  }));
+}
+
+// ---------------------------------------------------------------- 10e Experience Workspace: what it is + approach
+{
+  const s = base('Ema vs Experience Workspace', 'Same advanced requirements, given to Experience Workspace');
+  table(s, [
+    ['Experience Workspace capability (its own answer, 11 Nov)', 'Our test result'],
+    ['Create / update DA sheets and pages', T('Tested: created 2 sheets + 2 pages correctly')],
+    ['Preview and publish', T('Tested: asked first; previewed page and sheet; never published')],
+    ['Read or change code (GitHub)', NO('No, by its own statement: cannot extend the form block')],
+    ['Knows the EDS form block columns', NO('No: described different column names (Mandatory, Value, Description…)')],
+  ], { colW: [6.6, 5.7], fontSize: 12 });
+  table(s, [
+    ['Round', 'What it was given', 'Files (new names only)'],
+    ['1 · Blind', 'Exactly the same business requirements as Ema', '/forms-poc/ws-advanced-form + ws-advanced'],
+    ['2 · Guided', 'Same requirements + the sheet format Ema found by reading the code', '/forms-poc/ws2-advanced-form + ws2-advanced'],
+  ], { y: 4.15, colW: [1.6, 6.4, 4.3], fontSize: 12 });
+  s.addText('Same site, same form block code, same test values, same checks as Ema\'s advanced form.', { x: 0.5, y: 5.75, w: 12.3, h: 0.4, fontFace: FONT, fontSize: 12, bold: true, color: DARK });
+  legend(s);
+  s.addNotes(notes({
+    say: 'We repeated the advanced tests with Experience Workspace, the assistant inside DA.live. First we asked what it can do. It can create and update content and can preview and publish, but it cannot read or change code. It also described form columns that our block does not use. We ran two rounds: blind, with exactly the requirements Ema got, and guided, with the sheet format Ema had found in the code. Each round used new file names, so nothing else was touched.',
+    labels: 'Its capability list is self-reported; the right-hand column is what we tested.',
+    transition: 'Here is what happened.',
+    time: '1:00',
+  }));
+}
+
+// ---------------------------------------------------------------- 10f Experience Workspace: results
+{
+  const s = base('Ema vs Experience Workspace', 'Results: Ema vs Experience Workspace, blind and guided');
+  table(s, [
+    ['Requirement', 'Ema', 'Workspace blind', 'Workspace guided'],
+    ['Name letters only', T('Pass'), NO('Fail: "John3" accepted'), T('Pass')],
+    ['Email format', T('Pass'), L('Partial'), L('Partial: "name@example" accepted')],
+    ['Phone exactly 10 digits', T('Pass'), NO('Fail: "98765" accepted'), T('Pass')],
+    ['Address', T('Pass'), L('Partial'), T('Pass')],
+    ['Field-specific messages', T('Pass'), NO('Fail: browser bubble only'), T('Pass')],
+    ['3 steps, progress, Next / Previous, review', T('Pass'), NO('Fail: one single page'), T('Pass')],
+    ['No submit before the last step (Enter)', T('Pass'), NO('Fail: Enter submitted'), T('Pass')],
+    ['Business → Company required', T('Pass'), NO('Fail: always visible'), NO('Fail: shown, never required')],
+    ['Personal → hidden, doesn\'t block', T('Pass'), L('Partial: never hidden'), T('Pass')],
+    ['Unrequested rules', T('None'), L('US ZIP rule'), L('US ZIP rule, invalid syntax')],
+    ['Safety (asked first, no publish)', T('Pass'), T('Pass'), T('Pass')],
+    ['Summary', T('All pass'), NO('2 pass · 3 partial · 5 fail'), L('9 pass · 2 partial · 1 fail')],
+  ], { colW: [3.6, 1.6, 3.4, 3.7], fontSize: 10 });
+  s.addNotes(notes({
+    say: 'Blind, Experience Workspace guessed the sheet format, so most advanced behaviour failed: no steps, no rules applied, business fields always visible. Guided, with the right format, it got close to Ema, but only because it reused the code Ema had written. Two things it still missed: it did not make Company Name required for Business, which was partly our prompt wording, and it added a US ZIP rule nobody asked for, with syntax the browser rejects.',
+    explain: 'The difference is code access. Ema read the block code to learn the format, extended it and tested its own work. Experience Workspace works on content only.',
+    labels: 'Tested on the forms-poc branch preview on 11 Nov with the same values as Ema\'s form (evidence H01–H02, H11–H14).',
+    transition: 'What the guided form looks like.',
+    time: '1:30',
+  }));
+}
+
+// ---------------------------------------------------------------- 10g Experience Workspace: screenshots + takeaway
+{
+  const s = base('Ema vs Experience Workspace', 'What it built, and when to use which');
+  img(s, 'H01-ws-form-rendered.png', 0.5, 1.6, 3.6, 3.1, 1280, 1137, 'Blind: one page, no steps');
+  img(s, 'H12-ws2-empty-errors.png', 4.4, 1.6, 4.1, 3.1, 1280, 672, 'Guided: steps + field messages');
+  img(s, 'H14-ws2-review.png', 8.8, 1.6, 4.0, 3.1, 1280, 647, 'Guided: review step');
+  bullets(s, [
+    { text: 'Experience Workspace: good for content work in DA (create and update sheets and pages, preview) with safe approvals.', bold: true },
+    'It cannot read or change code, so it cannot discover or extend what the form block supports.',
+    { text: 'Ema: reads the code, extends the block, tests its own output, so it handles requirements the block did not support yet.', bold: true },
+    'Best together: Ema builds or extends the block once and documents the sheet format; then authors or Experience Workspace create forms with that format.',
+  ], { y: 5.05, h: 1.55, fontSize: 11 });
+  s.addNotes(notes({
+    say: 'On the left, the blind result: a single long page. In the middle and on the right, the guided result: proper steps, field messages and a review. My takeaway: Experience Workspace is a good content assistant, but advanced form behaviour lives in code, and that is where Ema made the difference. The best set-up is Ema extending the block once, then authors or Experience Workspace reusing the documented format.',
+    click: 'Optional live: /forms-poc/ws-advanced (blind) and /forms-poc/ws2-advanced (guided) on the forms-poc branch.',
     transition: 'So when should you use which approach?',
     time: '1:00',
   }));
@@ -515,18 +587,20 @@ const URL = {
     ['2', 'contact-form sheet', 'The 6 lowercase columns: field, label, type, placeholder, options, required. "Form A, typed by hand."'],
     ['3', 'contact page in DA', 'The form block table: cell 1 = sheet link, cell 2 = Power Automate address'],
     ['4', `${BR}/forms-poc/contact`, 'Send empty (focus jumps to Full Name), then a real test entry → "Thank you. Your entry was received."'],
-    ['5', 'Excel: wknd-contact-submissions (OneDrive)', 'The new row appears: saved without AEM Forms'],
-    ['6', `${BR}/forms-poc/booking`, 'Form B by Ema: 7 field types from one request'],
-    ['7', `${BR}/forms-poc/advanced`, 'Type John3 → letters-only message; phone 98765 → 10-digit rule; Business → Company required; Personal → hidden'],
-    ['8', 'advanced: Next / Previous / review', 'Step 1 of 3 → 2 → Previous keeps values → review lists all answers'],
-    ['9', 'Submit enquiry', 'Opens the thank-you page (confirmation row)'],
-    ['10', URL.gh, 'All code on the forms-poc branch; main and the live site untouched'],
-  ], { colW: [0.45, 4.6, 7.25], fontSize: 10 });
+    ['5', 'make.powerautomate.com → My flows → the contact flow', 'Trigger "When an HTTP request is received" (Who can trigger: Anyone, JSON schema) → "Add a row into a table" (Excel, Table2, utcNow() + form fields)'],
+    ['6', 'Same flow → Run history', 'A new Succeeded run for the entry just sent from step 4'],
+    ['7', 'Excel: wknd-contact-submissions (OneDrive)', 'The new row appears: saved without AEM Forms'],
+    ['8', `${BR}/forms-poc/booking`, 'Form B by Ema: 7 field types from one request'],
+    ['9', `${BR}/forms-poc/advanced`, 'Type John3 → letters-only message; phone 98765 → 10-digit rule; Business → Company required; Personal → hidden'],
+    ['10', 'advanced: Next / Previous / review', 'Step 1 of 3 → 2 → Previous keeps values → review lists all answers'],
+    ['11', 'Submit enquiry', 'Opens the thank-you page (confirmation row)'],
+    ['12', URL.gh, 'All code on the forms-poc branch; main and the live site untouched'],
+  ], { colW: [0.45, 4.6, 7.25], fontSize: 9 });
   s.addText('Test data only (Test User, test.user@example.com, 9876543210). Backup if the network fails: figures on slides 6–8, 11 and 14.', { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 10, color: GREY });
   s.addNotes(notes({
     say: 'Let me show the whole journey, from the DA folder to the saved entry and the advanced form. Everything is preview only on the forms-poc branch, with test data.',
     click: 'Open the tabs in this order. Prepare all of them before the session. On Form A use test data only, because it really writes a row to OneDrive.',
-    observe: 'Forms are sheets plus a page; Form A saves to Excel; the advanced form validates, branches and steps; Submit opens the thank-you page.',
+    observe: 'Forms are sheets plus a page; Form A sends to a Power Automate flow, which writes to Excel; the advanced form validates, branches and steps; Submit opens the thank-you page.',
     time: '6:00',
   }));
 }

@@ -1,6 +1,6 @@
 # Speaking script: FORMS POC - DA vs EMA
 
-Presenter: ALAN RAJI MANI (araji@adobe.com) · about 26 minutes (including a 6-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
+Presenter: ALAN RAJI MANI (araji@adobe.com) · about 30 minutes (including a 7-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
 
 ## Slide 1: FORMS POC - DA vs EMA
 
@@ -156,7 +156,7 @@ Why is nothing saved yet?
 We wanted entries saved in OneDrive without paying for AEM Forms. Adobe's own submission service needs an AEM Forms licence. Instead, the form sends each entry to a Microsoft Power Automate flow, which adds a row to an Excel table in OneDrive. The form block already supports a submit address, so sending needed no code change, only the address in the second cell of the block table. Both my test entry and a live entry from the website arrived in Excel.
 
 **CLICK / DEMONSTRATE:**
-Show the Excel file wknd-contact-submissions with rows 2 and 3.
+Show the flow in make.powerautomate.com (trigger + Add a row into a table), its Run history, then the Excel file wknd-contact-submissions with its rows.
 
 **HOW TO EXPLAIN THE FINDINGS:**
 This is fine for a POC. For production, add spam protection and choose between Power Automate Premium and AEM Forms.
@@ -207,11 +207,53 @@ On the left, step one with an error under every missing field. On the right, the
 Live: https://forms-poc--bv-poc-wknd-aln--araji-adobe.aem.page/forms-poc/advanced
 
 **TRANSITION:**
+Next: the same tests with Experience Workspace.
+
+*TIME: 1:00*
+
+## Slide 15: Same advanced requirements, given to Experience Workspace
+
+**SAY:**
+We repeated the advanced tests with Experience Workspace, the assistant inside DA.live. First we asked what it can do. It can create and update content and can preview and publish, but it cannot read or change code. It also described form columns that our block does not use. We ran two rounds: blind, with exactly the requirements Ema got, and guided, with the sheet format Ema had found in the code. Each round used new file names, so nothing else was touched.
+
+**EVIDENCE LABELS:**
+Its capability list is self-reported; the right-hand column is what we tested.
+
+**TRANSITION:**
+Here is what happened.
+
+*TIME: 1:00*
+
+## Slide 16: Results: Ema vs Experience Workspace, blind and guided
+
+**SAY:**
+Blind, Experience Workspace guessed the sheet format, so most advanced behaviour failed: no steps, no rules applied, business fields always visible. Guided, with the right format, it got close to Ema, but only because it reused the code Ema had written. Two things it still missed: it did not make Company Name required for Business, which was partly our prompt wording, and it added a US ZIP rule nobody asked for, with syntax the browser rejects.
+
+**HOW TO EXPLAIN THE FINDINGS:**
+The difference is code access. Ema read the block code to learn the format, extended it and tested its own work. Experience Workspace works on content only.
+
+**EVIDENCE LABELS:**
+Tested on the forms-poc branch preview on 11 Nov with the same values as Ema's form (evidence H01–H02, H11–H14).
+
+**TRANSITION:**
+What the guided form looks like.
+
+*TIME: 1:30*
+
+## Slide 17: What it built, and when to use which
+
+**SAY:**
+On the left, the blind result: a single long page. In the middle and on the right, the guided result: proper steps, field messages and a review. My takeaway: Experience Workspace is a good content assistant, but advanced form behaviour lives in code, and that is where Ema made the difference. The best set-up is Ema extending the block once, then authors or Experience Workspace reusing the documented format.
+
+**CLICK / DEMONSTRATE:**
+Optional live: /forms-poc/ws-advanced (blind) and /forms-poc/ws2-advanced (guided) on the forms-poc branch.
+
+**TRANSITION:**
 So when should you use which approach?
 
 *TIME: 1:00*
 
-## Slide 15: When to use DA by hand, and when to use Ema
+## Slide 18: When to use DA by hand, and when to use Ema
 
 **SAY:**
 My recommendation is to use both. Ema drafts the form fast and accurately. The author reviews the sheet in DA, previews it and runs the four tests. DA by hand stays the fallback for small changes and for times when the agent has no access.
@@ -221,7 +263,7 @@ Let me show you both forms live.
 
 *TIME: 1:00*
 
-## Slide 16: End-to-end demo flow
+## Slide 19: End-to-end demo flow
 
 **SAY:**
 Let me show the whole journey, from the DA folder to the saved entry and the advanced form. Everything is preview only on the forms-poc branch, with test data.
@@ -230,11 +272,11 @@ Let me show the whole journey, from the DA folder to the saved entry and the adv
 Open the tabs in this order. Prepare all of them before the session. On Form A use test data only, because it really writes a row to OneDrive.
 
 **AUDIENCE SHOULD OBSERVE:**
-Forms are sheets plus a page; Form A saves to Excel; the advanced form validates, branches and steps; Submit opens the thank-you page.
+Forms are sheets plus a page; Form A sends to a Power Automate flow, which writes to Excel; the advanced form validates, branches and steps; Submit opens the thank-you page.
 
 *TIME: 6:00*
 
-## Slide 17: From POC to production
+## Slide 20: From POC to production
 
 **SAY:**
 To go to production: confirm the licence and allowlist, trial the submission service, merge the branch through a normal pull request, and publish through our usual process. The SOP and the four tests are reusable for every future form.
@@ -244,6 +286,6 @@ Questions.
 
 *TIME: 0:45*
 
-## Slide 18: Sources and evidence
+## Slide 21: Sources and evidence
 
 Reference slide, not presented.
