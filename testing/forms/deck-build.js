@@ -189,9 +189,10 @@ const URL = {
     ['EDS site', 'araji-adobe / bv-poc-wknd-aln (WKND sandbox)', T('Tested')],
     ['Content source', 'DA.live: content.da.live/araji-adobe/bv-poc-wknd-aln', T('Tested')],
     ['Code', 'GitHub ARAJI-ADOBE/bv-poc-wknd-aln, branch forms-poc (main untouched)', T('Tested')],
-    ['Form block', 'Adobe Block Collection "form" block, plus one small fix (see slide 9)', T('Tested')],
+    ['Form block', 'Adobe Block Collection "form" block, plus small fixes (see slide 10)', T('Tested')],
     ['DA content', '/forms-poc: contact-form (sheet), contact (page), booking-form (sheet), booking (page)', T('Tested')],
     ['Publishing', 'Preview only (aem.page). Nothing published to aem.live.', T('Tested')],
+    ['Saving entries', 'Form A → Microsoft Power Automate → Excel table in OneDrive (no AEM Forms)', T('Tested')],
     ['Licence', 'Adobe docs: "a valid AEM Forms license is required"', D('Documented')],
   ], { colW: [2.2, 8.4, 1.7], fontSize: 12 });
   legend(s);
@@ -225,8 +226,34 @@ const URL = {
     say: 'There are four pieces. A sheet lists the fields. Preview turns it into data. A page holds a table called form that links to the sheet. Then the block code builds the form in the browser. The author only touches the first three, and the code is added once.',
     explain: 'Adobe\'s forms overview lists SharePoint and Google Drive for document-based forms. We tested that a DA.live sheet works the same way for the form definition.',
     labels: 'Tested: DA sheet as the form definition. Documented: the source list on aem.live.',
-    transition: 'Here is Form A, built by hand.',
+    transition: 'Next, the content model behind it.',
     time: '1:15',
+  }));
+}
+
+// ---------------------------------------------------------------- 4b Content model
+{
+  const s = base('Content model', 'Content modelling in EDS, and the model our forms use');
+  table(s, [
+    ['Piece', 'What the author does', 'In our POC'],
+    ['Default content', 'Normal headings, text, images, links (no table)', '—'],
+    ['Block', 'A table; the top cell names the block, the rows below hold its content', 'form table: cell 1 = sheet link, cell 2 = submit address'],
+    ['Section', 'Split the page with ---; a Section Metadata table can style it', '—'],
+    ['Page metadata', 'A metadata table: title, description, image', '—'],
+    ['Sheet', 'Rows of structured, repeating data, served as JSON', '6 lowercase columns: field · label · type · placeholder · options · required'],
+  ], { colW: [2.0, 5.2, 5.1], fontSize: 11 });
+  bullets(s, [
+    'Prefer default content; use a block only when it adds real value',
+    'Keep blocks simple: few columns, no blocks inside blocks',
+    'Easy for authors: no hidden codes; the code handles missing or extra cells',
+    { text: 'Same model for Form A and Form B, so a hand-built form and an Ema-built form behave identically', bold: true },
+  ], { y: 4.55, h: 1.9, fontSize: 12 });
+  s.addText('Adobe: https://www.aem.live/docs/davidsmodel  ·  https://www.aem.live/developer/markup-sections-blocks', { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 9, color: BLUE });
+  s.addNotes(notes({
+    say: 'Content modelling means deciding how authors structure content so the site can turn it into the right design. EDS has five pieces: default content, blocks, sections, page metadata and sheets. Our forms use one block with two cells, a link to the field sheet and an optional submit address, plus a six-column sheet. Ema and the hand-built form follow the same model, which is why they behave the same.',
+    labels: 'Documented: aem.live content-modelling guidance (David\'s Model). Tested: our form model.',
+    transition: 'Here is Form A, built by hand.',
+    time: '1:00',
   }));
 }
 
@@ -268,7 +295,7 @@ const URL = {
     { text: 'Author approval 1: upload 2 new items to DA /forms-poc and preview them', bold: true },
     'Checked the uploaded sheet against the local copy: 8 of 8 rows match',
     'Previewed both items and checked the branch page renders',
-    { text: 'Author approval 2: code fix on the branch (slide 9)', bold: true },
+    { text: 'Author approval 2: code fix on the branch (slide 10)', bold: true },
     { text: 'Limits: Ema lost DA and GitHub access after an overnight session restart. A person had to re-enable the permission and push the code with Sync.', color: AMBER, bold: true },
   ], { x: 0.5, y: 1.6, w: 5.9, h: 5.0, fontSize: 12 });
   img(s, 'E02-formB-booking-rendered.png', 6.6, 1.65, 6.2, 4.6, 1280, 724, 'Form B rendered on the forms-poc branch preview');
@@ -291,14 +318,14 @@ const URL = {
     ['T1', 'Click Send with everything empty', T('Pass: stays on page, focus on Full Name'), T('Pass: stays on page, focus on Full name')],
     ['T2', 'Enter an invalid email (not-an-email)', T('Pass: stops at Email'), U('n/a (the email check is the same code)')],
     ['T3', 'Leave a radio button / checkbox empty', U('n/a (no radio or checkbox)'), T('Pass: stops at Experience level, then Consent')],
-    ['T4', 'Fill every field correctly and send', T('Pass: "Thank you. Demo only…", form clears'), T('Pass: same; the dropdown resets')],
+    ['T4', 'Fill every field correctly and send', T('Pass: "Thank you. Your entry was received."; row added in Excel'), T('Pass: same; the dropdown resets')],
     ['—', 'Typed values appear in the web address', T('No'), T('No')],
-    ['—', 'Entry saved anywhere', L('No: saving is not set up (slide 10)'), L('No: saving is not set up (slide 10)')],
+    ['—', 'Entry saved anywhere', T('Yes: OneDrive Excel via Power Automate (slide 11)'), L('Not connected yet: "Demo only" notice')],
   ], { colW: [0.6, 3.8, 3.95, 3.95], fontSize: 11 });
   img(s, 'E02-formB-booking-demo-notice.png', 7.6, 4.95, 5.2, 1.45, 1280, 784, 'T4: demo notice after a valid entry');
-  s.addText('Retested 5 Nov, 10:33 UTC, after the fix was live on forms-poc. Green = Tested pass, amber = Limitation.', { x: 0.5, y: 5.0, w: 6.8, h: 0.6, fontFace: FONT, fontSize: 11, color: GREY });
+  s.addText('Retested 5 Nov on the forms-poc branch; Form A live save tested at 6:20 pm IST. Green = Tested pass, amber = Limitation.', { x: 0.5, y: 5.0, w: 6.8, h: 0.6, fontFace: FONT, fontSize: 11, color: GREY });
   s.addNotes(notes({
-    say: 'Both forms pass all the tests that apply to them. Empty submissions are blocked, a bad email is caught, unchecked radios and checkboxes are caught, and a valid entry shows a clear demo message. No entry is saved anywhere yet. I will explain why on slide ten.',
+    say: 'Both forms pass all the tests that apply to them. Empty submissions are blocked, a bad email is caught, unchecked radios and checkboxes are caught, and a valid entry shows a clear demo message. Form A entries are saved to OneDrive; Form B is not connected yet. Slide eleven shows how Form A saves to OneDrive.',
     click: 'Live: click Send on the empty contact form, then fill the booking form and send.',
     observe: 'The cursor jumps to the first missing field. The thank-you message is labelled "Demo only".',
     labels: 'Tested: T1–T4 on both branch preview pages. Limitation: no saving.',
@@ -321,6 +348,7 @@ const URL = {
     ['Learning value', 'Author learns how forms are built', 'Little, unless the author reads the output', 'DA'],
     ['Works without Ema access', 'Yes', 'No: blocked twice by lost access after a restart', 'DA'],
     ['Same block, same output', 'Yes', 'Yes', 'Equal'],
+    ['Saving entries', 'Connected (Power Automate → OneDrive)', 'Same method, not connected in the POC', 'DA (only one tested)'],
   ], { colW: [2.6, 3.4, 4.9, 1.4], fontSize: 11 });
   s.addNotes(notes({
     say: 'Ema was about eight times faster to hands-on completion and built a more complex form with no typing slips. DA is the more reliable path when the agent has no access, and it teaches the author how forms work. In both cases the output is the same block, so whichever way a form is built, it behaves the same for visitors.',
@@ -342,6 +370,7 @@ const URL = {
     ['F3', 'Ema lost DA access (401) and GitHub access after an overnight restart', 'Ema blocked', L('Re-enable in Settings → LLM Permissions; push code with Sync')],
     ['F4', 'Chat attachments turn .pptx files into plain text', 'Corporate template could not be used', L('Deck uses the Adobe default style')],
     ['F5', 'The main preview shows no form: the block exists only on forms-poc', 'Expected', U('Merge forms-poc to main when approved')],
+    ['F6', 'Sync → Code pushed every untracked file (deck, evidence) to the public repo', 'Confidential file public', L('Review what Sync stages; the owner decides on clean-up')],
   ], { colW: [0.6, 5.3, 2.3, 4.1], fontSize: 11 });
   s.addNotes(notes({
     say: 'One real defect. With no submit address, the standard form block skipped its checks, so clicking Send reloaded the page with the visitor\'s details in the address bar. I approved a three-line fix on our branch: always validate, and show a clear demo message instead. Both forms were retested. The other items are process lessons, and they are all in the SOP.',
@@ -353,26 +382,32 @@ const URL = {
 
 // ---------------------------------------------------------------- 10 Submissions
 {
-  const s = base('Saving entries', 'Why submissions are not saved yet');
+  const s = base('Saving entries', 'Saving to OneDrive without AEM Forms: Power Automate');
+  box(s, 'Form A\n(Send Message)', 0.6, 1.75, 2.6, 1.0, RED);
+  arrow(s, 3.25, 2.25, 3.85);
+  box(s, 'Power Automate\n"When an HTTP request\nis received" (Premium)', 3.9, 1.75, 3.0, 1.0, DARK, 'FFFFFF', 11);
+  arrow(s, 6.95, 2.25, 7.55);
+  box(s, 'Excel Online\n"Add a row into a table"', 7.6, 1.75, 2.8, 1.0, DARK, 'FFFFFF', 11);
+  arrow(s, 10.45, 2.25, 11.05);
+  box(s, 'OneDrive\nwknd-contact-\nsubmissions.xlsx', 11.1, 1.75, 1.75, 1.0, BLUE, 'FFFFFF', 10);
   table(s, [
-    ['Adobe requirement (Forms Submission Service)', 'Our status'],
-    ['Repository added to Adobe\'s allowlist', U('Unknown: no process documented')],
-    ['Adaptive Forms Block (not the simple form block)', NO('Not installed')],
-    ['Excel or Google Sheet with an "incoming" tab, shared with forms@adobe.com ("Anyone with the link can edit")', U('Unknown: corporate sharing policy')],
-    ['Submit endpoint with a form {id}', U('Unknown: where the id comes from is not documented')],
-    ['Targets: Google Sheets, SharePoint, OneDrive', D('Documented: DA is not listed')],
-  ], { colW: [7.6, 4.7], fontSize: 12 });
-  bullets(s, [
-    'Decision (5 Nov): stop and document instead of spending 40 minutes on a likely block.',
-    'Next step: confirm the allowlist process with the AEM Forms team, then trial the Adaptive Forms Block on a branch.',
-  ], { y: 5.0, h: 1.4, fontSize: 13 });
-  s.addText(`Source: ${URL.docSubmit}`, { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 9, color: BLUE });
+    ['Check', 'Result'],
+    ['Premium HTTP trigger available on our Microsoft account; "Who can trigger" = Anyone allowed', T('Tested')],
+    ['Browser permission (CORS): preflight 204, allow-origin *; sending returns 202', T('Tested')],
+    ['Ema test entry and a live website entry both arrived as rows in Excel', T('Tested')],
+    ['No code change for sending: the flow address goes in the 2nd cell of the form block table', T('Tested')],
+    ['Adobe route (Forms Submission Service) needs an AEM Forms licence, allowlist and Adaptive Forms Block', D('Documented: not used')],
+    ['Risks: anyone with the address can post rows (no spam protection); depends on a Microsoft Premium licence', L('Limitation')],
+  ], { y: 3.0, colW: [9.6, 2.7], fontSize: 11 });
+  s.addText(`Adobe docs: ${URL.docSubmit}`, { x: 0.5, y: 6.62, w: 12.3, h: 0.3, fontFace: FONT, fontSize: 9, color: BLUE });
   s.addNotes(notes({
-    say: 'Saving entries uses Adobe\'s Forms Submission Service. Its documentation needs an allowlisted repository, the larger Adaptive Forms Block, a shared spreadsheet and a form id. Some of that has no documented process. With limited time we chose to document it rather than spend forty minutes on a likely dead end. This is the main next step.',
-    labels: 'Documented: the requirements (Experience League). Unknown: allowlist, sharing policy, form id.',
-    qa: 'Q: Can DA store submissions? A: DA is not a documented target; the documented targets are Google Sheets, SharePoint and OneDrive.',
+    say: 'We wanted entries saved in OneDrive without paying for AEM Forms. Adobe\'s own submission service needs an AEM Forms licence. Instead, the form sends each entry to a Microsoft Power Automate flow, which adds a row to an Excel table in OneDrive. The form block already supports a submit address, so sending needed no code change, only the address in the second cell of the block table. Both my test entry and a live entry from the website arrived in Excel.',
+    click: 'Show the Excel file wknd-contact-submissions with rows 2 and 3.',
+    explain: 'This is fine for a POC. For production, add spam protection and choose between Power Automate Premium and AEM Forms.',
+    labels: 'Tested: trigger, CORS, 202, rows in Excel. Documented: AEM Forms requirements. Limitation: open endpoint, Microsoft Premium.',
+    qa: 'Q: Is the address secret? A: No. It is in the page source, so anyone could post to it. That is why production needs spam protection or a server-side relay.',
     transition: 'So when should you use which approach?',
-    time: '1:15',
+    time: '1:30',
   }));
 }
 
@@ -406,11 +441,12 @@ const URL = {
     ['#', 'Open', 'Show'],
     ['1', URL.da, 'The forms-poc folder: 2 sheets + 2 pages'],
     ['2', URL.aj, 'Sheet → JSON: the data the form is built from'],
-    ['3', URL.a, 'Form A: click Send empty (T1), then a bad email (T2)'],
+    ['3', URL.a, 'Form A: Send empty (T1), bad email (T2), then a real entry'],
     ['4', URL.b, 'Form B: fill it in and send (T4): demo notice'],
-    ['5', URL.gh, 'Code branch: form block + fix, main untouched'],
+    ['5', 'Excel: wknd-contact-submissions (OneDrive)', 'The live entry from step 3 arrives as a new row'],
+    ['6', URL.gh, 'Code branch: form block + fixes, main untouched'],
   ], { colW: [0.5, 7.4, 4.4], fontSize: 11 });
-  s.addText('Backup if the network fails: figures on slides 5–7 show the same states.', { x: 0.5, y: 5.6, w: 12.3, h: 0.4, fontFace: FONT, fontSize: 12, color: GREY });
+  s.addText('Backup if the network fails: figures on slides 6–8 show the same states.', { x: 0.5, y: 5.6, w: 12.3, h: 0.4, fontFace: FONT, fontSize: 12, color: GREY });
   s.addNotes(notes({
     say: 'Five quick stops. The DA folder, the sheet as data, Form A failing validation, Form B succeeding, and the code branch.',
     click: 'Open each link in order, in a browser tab prepared before the session.',
@@ -424,7 +460,8 @@ const URL = {
   const s = base('Next steps', 'From POC to production');
   table(s, [
     ['#', 'Action', 'Owner'],
-    ['1', 'Confirm Forms licence and the allowlist process with the AEM Forms team', 'Alan'],
+    ['1', 'Choose the production saving route: Power Automate (add spam protection) or AEM Forms (licence)', 'Alan + team'],
+    ['1b', 'Connect Form B to its own flow and Excel table (same steps as Form A)', 'Author'],
     ['2', 'Trial the Adaptive Forms Block + Submission Service on a new branch', 'Developer'],
     ['3', 'Review and merge forms-poc to main (needs a PR with a preview link)', 'Code owner'],
     ['4', 'Publish /forms-poc pages through the normal (scheduled) publish process', 'Author'],

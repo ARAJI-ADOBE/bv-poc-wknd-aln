@@ -95,7 +95,22 @@ If T1 reloads the page and the address gains `?name=&email=…`, the branch is m
 
 ---
 
-## Part D: Saving submissions (not done in this POC)
+## Part D: Saving submissions to OneDrive without AEM Forms (Tested for Form A)
+
+| # | Where | Do exactly this | Expected |
+|---|---|---|---|
+| D1 | make.powerautomate.com | **+ Create** → **Instant cloud flow** → search `HTTP` → select **When an HTTP request is received** → **Create** | The flow editor opens with a box named "manual". No Premium/upgrade message. |
+| D2 | OneDrive | New **Excel workbook** `wknd-contact-submissions`; row 1 = `submittedAt`, `name`, `email`, `topic`, `message` (use the form's `field` names); select the headers → **Insert → Table** → "My table has headers" | A table with filter arrows (ours was named Table2, which is fine) |
+| D3 | Flow: "manual" box | **Who can trigger** = **Anyone**; paste a Request Body JSON Schema: an object `data` with one string property per field | No red error; "URL will be generated after save" |
+| D4 | Flow | **+** → **Add an action** → Excel Online (Business) **Add a row into a table** → OneDrive for Business / OneDrive / the file / the table → **Advanced parameters → Show all** | The column boxes appear |
+| D5 | Column boxes | Clear each box, click **fx**, enter `utcNow()` for submittedAt and `triggerBody()?['data']?['<field>']` for the others → **Add** | Each box shows a coloured chip, not plain text |
+| D6 | Flow | **Save**, then open "manual" and copy the **HTTP URL** (don't paste it into chats) | A long `https://…powerplatform.com…` address |
+| D7 | DA page | Right-hand cell of the `form` table: type `Submit to OneDrive`, select it, Ctrl/Cmd + K, paste the URL, Enter; then **Preview** the page | A link in cell 2 |
+| D8 | Branch page | Fill in the form and send | "Thank you. Your entry was received." and a new row in Excel within seconds |
+
+Tested on 5 Nov: the CORS preflight returns 204 with `access-control-allow-origin: *`, and sending returns 202. **Limitations:** the flow address is visible in the page source, so anyone can post rows (no spam protection), and the HTTP trigger is a Microsoft **Premium** feature.
+
+### Adobe's own route (not used)
 
 The Forms Submission Service (**Documented**) needs:
 1. The repository on Adobe's allowlist (process not documented, so ask the AEM Forms team).

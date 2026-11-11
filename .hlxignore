@@ -9,3 +9,4 @@ sync-block-collection.sh
 
 # test reports (kept in git, not served)
 testing/*
+catalog/

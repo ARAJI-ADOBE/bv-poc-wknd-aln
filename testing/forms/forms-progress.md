@@ -37,7 +37,12 @@ Labels: Documented / Tested / Unsupported / Unknown
 | 20 | Excel `wknd-contact-submissions.xlsx` in OneDrive, table Table2 (submittedAt, name, email, topic, message); action "Add a row into a table" with utcNow() + triggerBody()?['data']?[…] | User | Tested | C03, C05b |
 | 21 | Flow URL put in Form A's 2nd block cell, typed by the user in DA (kept out of chat) | User | Tested (read from DA) | C07 |
 | 22 | Ema's server test (12:37 UTC): CORS preflight 204 with allow-origin *; POST 202; the row appeared in Excel | Ema + User | Tested | C08-excel-test-row.png |
-| 23 | Code: thank-you / error message after sending (commit aef1c18) | Ema | Lint OK; push pending | — |
+| 23 | Code: thank-you / error message after sending (commit aef1c18) | Ema | Pushed by the user with Sync; live on the branch at 12:50 UTC. Sync also pushed all 15 untracked testing/forms files plus .agents/settings.json to the public repo (no flow signature in them) | C09 |
+| 24 | Live website test: Form A previewed in DA, real entry sent from the branch page | User | Tested: "Thank you. Your entry was received."; row 3 appeared in Excel | C10, C11 |
+| 25 | Deck updated: OneDrive saving + content-model slide (15 slides); SOP Part D added; script regenerated | Ema | Done 12:58 UTC | testing/forms/ |
+
+| 26 | 11 Nov. Advanced forms extension: a new separate form (user choice). Ema generated sheet `advanced-form` (15 rows: 3 steps, review, pattern/error columns, conditional Business fields) and page `advanced`; extended the block with opt-in pattern, error, step and review (commit 28b5d8e, local); tested locally (see advanced-capability-matrix.md) | Ema | Pass (local) | F01–F06 |
+| 27 | Upload + preview of advanced-form and advanced (user approved) | Ema | Tested: DA 201 ×2, rows 15/15 match, preview 200 ×2, the served sheet keeps the patterns intact. The code push is still pending, so the branch preview has old code | — |
 
 ## Defects found
 

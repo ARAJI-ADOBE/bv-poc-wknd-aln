@@ -1,6 +1,6 @@
 # Speaking script: Forms on EDS, DA by hand vs Ema
 
-Presenter: ALAN RAJI MANI (araji@adobe.com) · about 17 minutes (including a 3-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
+Presenter: ALAN RAJI MANI (araji@adobe.com) · about 19 minutes (including a 3-minute live demo) plus Q&A · generated from the speaker notes in Forms-POC-DA-vs-Ema.pptx
 
 ## Slide 1: Forms on Edge Delivery Services (title)
 
@@ -47,11 +47,24 @@ Adobe's forms overview lists SharePoint and Google Drive for document-based form
 Tested: DA sheet as the form definition. Documented: the source list on aem.live.
 
 **TRANSITION:**
-Here is Form A, built by hand.
+Next, the content model behind it.
 
 *TIME: 1:15*
 
-## Slide 5: FORM A · DA.LIVE BY HAND
+## Slide 5: Content modelling in EDS, and the model our forms use
+
+**SAY:**
+Content modelling means deciding how authors structure content so the site can turn it into the right design. EDS has five pieces: default content, blocks, sections, page metadata and sheets. Our forms use one block with two cells, a link to the field sheet and an optional submit address, plus a six-column sheet. Ema and the hand-built form follow the same model, which is why they behave the same.
+
+**EVIDENCE LABELS:**
+Documented: aem.live content-modelling guidance (David's Model). Tested: our form model.
+
+**TRANSITION:**
+Here is Form A, built by hand.
+
+*TIME: 1:00*
+
+## Slide 6: Contact WKND: 10 author steps, about 35 minutes
 
 **SAY:**
 Form A took ten author steps and about thirty-five minutes of hands-on time. Two things caught us out. DA calls the item "Page", not "Document". The default table is called columns and has to be renamed to form. The first round of typing the rows never saved, so we lost it and retyped it.
@@ -70,7 +83,7 @@ Now the same job done by Ema, on a harder form.
 
 *TIME: 1:30*
 
-## Slide 6: Adventure Booking Request: 1 prompt, 2 approvals, about 4 minutes
+## Slide 7: Adventure Booking Request: 1 prompt, 2 approvals, about 4 minutes
 
 **SAY:**
 For Form B I gave Ema one request. It used the real adventure names from the site, generated the sheet and page, and test-rendered them before touching DA. It then asked me before uploading. The upload matched the local copy exactly. Hands-on time was about four minutes plus two approval clicks. Ema still needs a human: after the overnight restart it lost DA and GitHub access, and I had to push the code myself with the Sync button.
@@ -89,10 +102,10 @@ Both forms then went through the same four tests.
 
 *TIME: 1:30*
 
-## Slide 7: Same four tests, both forms, real branch preview
+## Slide 8: Same four tests, both forms, real branch preview
 
 **SAY:**
-Both forms pass all the tests that apply to them. Empty submissions are blocked, a bad email is caught, unchecked radios and checkboxes are caught, and a valid entry shows a clear demo message. No entry is saved anywhere yet. I will explain why on slide ten.
+Both forms pass all the tests that apply to them. Empty submissions are blocked, a bad email is caught, unchecked radios and checkboxes are caught, and a valid entry shows a clear demo message. Form A entries are saved to OneDrive; Form B is not connected yet. Slide eleven shows how Form A saves to OneDrive.
 
 **CLICK / DEMONSTRATE:**
 Live: click Send on the empty contact form, then fill the booking form and send.
@@ -108,7 +121,7 @@ Here is the head-to-head comparison.
 
 *TIME: 1:30*
 
-## Slide 8: Head-to-head comparison
+## Slide 9: Head-to-head comparison
 
 **SAY:**
 Ema was about eight times faster to hands-on completion and built a more complex form with no typing slips. DA is the more reliable path when the agent has no access, and it teaches the author how forms work. In both cases the output is the same block, so whichever way a form is built, it behaves the same for visitors.
@@ -124,7 +137,7 @@ What went wrong, and what we fixed.
 
 *TIME: 1:30*
 
-## Slide 9: What broke and how we handled it
+## Slide 10: What broke and how we handled it
 
 **SAY:**
 One real defect. With no submit address, the standard form block skipped its checks, so clicking Send reloaded the page with the visitor's details in the address bar. I approved a three-line fix on our branch: always validate, and show a clear demo message instead. Both forms were retested. The other items are process lessons, and they are all in the SOP.
@@ -137,23 +150,29 @@ Why is nothing saved yet?
 
 *TIME: 1:30*
 
-## Slide 10: Why submissions are not saved yet
+## Slide 11: Saving to OneDrive without AEM Forms: Power Automate
 
 **SAY:**
-Saving entries uses Adobe's Forms Submission Service. Its documentation needs an allowlisted repository, the larger Adaptive Forms Block, a shared spreadsheet and a form id. Some of that has no documented process. With limited time we chose to document it rather than spend forty minutes on a likely dead end. This is the main next step.
+We wanted entries saved in OneDrive without paying for AEM Forms. Adobe's own submission service needs an AEM Forms licence. Instead, the form sends each entry to a Microsoft Power Automate flow, which adds a row to an Excel table in OneDrive. The form block already supports a submit address, so sending needed no code change, only the address in the second cell of the block table. Both my test entry and a live entry from the website arrived in Excel.
+
+**CLICK / DEMONSTRATE:**
+Show the Excel file wknd-contact-submissions with rows 2 and 3.
+
+**HOW TO EXPLAIN THE FINDINGS:**
+This is fine for a POC. For production, add spam protection and choose between Power Automate Premium and AEM Forms.
 
 **EVIDENCE LABELS:**
-Documented: the requirements (Experience League). Unknown: allowlist, sharing policy, form id.
+Tested: trigger, CORS, 202, rows in Excel. Documented: AEM Forms requirements. Limitation: open endpoint, Microsoft Premium.
 
 **TRANSITION:**
 So when should you use which approach?
 
 **LIKELY QUESTIONS AND ANSWERS:**
-Q: Can DA store submissions? A: DA is not a documented target; the documented targets are Google Sheets, SharePoint and OneDrive.
+Q: Is the address secret? A: No. It is in the page source, so anyone could post to it. That is why production needs spam protection or a server-side relay.
 
-*TIME: 1:15*
+*TIME: 1:30*
 
-## Slide 11: When to use DA by hand, and when to use Ema
+## Slide 12: When to use DA by hand, and when to use Ema
 
 **SAY:**
 My recommendation is to use both. Ema drafts the form fast and accurately. The author reviews the sheet in DA, previews it and runs the four tests. DA by hand stays the fallback for small changes and for times when the agent has no access.
@@ -163,7 +182,7 @@ Let me show you both forms live.
 
 *TIME: 1:00*
 
-## Slide 12: Demo order (3 minutes)
+## Slide 13: Demo order (3 minutes)
 
 **SAY:**
 Five quick stops. The DA folder, the sheet as data, Form A failing validation, Form B succeeding, and the code branch.
@@ -176,7 +195,7 @@ Both forms come from sheets; the code is on a branch; nothing is live.
 
 *TIME: 3:00*
 
-## Slide 13: From POC to production
+## Slide 14: From POC to production
 
 **SAY:**
 To go to production: confirm the licence and allowlist, trial the submission service, merge the branch through a normal pull request, and publish through our usual process. The SOP and the four tests are reusable for every future form.
@@ -186,6 +205,6 @@ Questions.
 
 *TIME: 0:45*
 
-## Slide 14: Sources and evidence
+## Slide 15: Sources and evidence
 
 Reference slide, not presented.
