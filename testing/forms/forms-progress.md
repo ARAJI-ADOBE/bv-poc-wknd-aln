@@ -49,6 +49,7 @@ Labels: Documented / Tested / Unsupported / Unknown
 | 31 | 16 Nov. SOP v1.1: new Part C (Experience Workspace: steps C1–C8, row checklist, prompt template), the extended sheet format table in Part A (next-steps item 6), Workspace troubleshooting rows. Old Parts C/D/E are now D/E/F | Ema | Done | SOP-Forms-DA-and-Ema.md |
 | 32 | 16 Nov. Deck slide 24 (Next steps): item 6 marked done (SOP v1.1) and its speaker note updated; deck rebuilt (25 slides, no other slide changed); speaking script regenerated | Ema | Done | Forms-POC-DA-vs-Ema.pptx |
 | 33 | 16 Nov. Deck slide 21 (findings): W1 resolution changed to "Documented in SOP Part C (format + row checklist)", kept as Limitation (amber); deck rebuilt, only slide 21 changed; speaker notes unchanged | Ema | Done | Forms-POC-DA-vs-Ema.pptx |
+| 34 | 16 Nov. User pushed with Sync; it landed on **main** (commit d41f5dd, 41 files: testing/forms/ + .hlxignore + .agents/settings.json; no PR), because the workspace is on main. Checked: no code or content changed; testing files and .agents/settings.json are not served (404 on the main preview); the deck on GitHub main matches the local deck exactly. The user chose to leave it on main. The forms-poc branch still has the 11 Nov deck | User + Ema | Done | github.com/ARAJI-ADOBE/bv-poc-wknd-aln/blob/main/testing/forms/Forms-POC-DA-vs-Ema.pptx |
 
 ## Defects found
 
